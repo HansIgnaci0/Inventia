@@ -15,6 +15,7 @@ public class Mainn extends javax.swing.JFrame {
      */
     public Mainn() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

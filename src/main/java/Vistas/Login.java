@@ -107,7 +107,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // Código de ejemplo dentro de un ActionListener o un método de instancia
+      
 
 ConexionBD conexion = new ConexionBD();
 String username = jTextField1.getText();
@@ -116,9 +116,9 @@ String clave = new String(jPasswordField1.getPassword());
 conexion.establecerConexion(username, clave);
 boolean connectbolean = conexion.bConexion(username, clave);
 
-// Si la conexión es exitosa, cerramos el Login
+
 if (connectbolean) {
-    this.dispose();  // Cierra el JFrame actual (LoginFrame) usando 'this'
+    this.dispose();  
     Mainn mainredirect = new Mainn();
     mainredirect.setVisible(true);
 } else {
