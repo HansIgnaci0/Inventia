@@ -6,6 +6,7 @@ package com.mycompany.inventia;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,6 +14,10 @@ import javax.swing.JOptionPane;
  * @author hansi
  */
 public class ConexionBD {
+
+    static Connection getConnection() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     Connection conectar=null;
 
@@ -44,5 +49,9 @@ public boolean bConexion(String usuario, String contrasenia) {
     
     return booleanConexion;  // Devolvemos el resultado
 }
+
+    Statement createStatement() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 }

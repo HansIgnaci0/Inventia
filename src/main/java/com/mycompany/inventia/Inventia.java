@@ -15,6 +15,8 @@ public class Inventia {
         ConexionBD conexion = new ConexionBD();
         
         
+
+        
         
         
     }
