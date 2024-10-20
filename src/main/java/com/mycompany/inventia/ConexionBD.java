@@ -6,8 +6,11 @@ package com.mycompany.inventia;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -53,5 +56,34 @@ public boolean bConexion(String usuario, String contrasenia) {
     Statement createStatement() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+public void listarProductos(JTable tabla, Connection conexion) {
+        // Crear el modelo de la tabla con dos columnas
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID Producto");
+        modelo.addColumn("Nombre");
 
-}
+        String query = "SELECT ID_PRODUCTO, NOMBRE FROM producto"; // Cambia 'producto' por el nombre de tu tabla
+        
+        try {
+            Statement stmt = conexion.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            // Recorrer los resultados de la consulta
+            while (rs.next()) {
+                String[] fila = new String[2];
+                fila[0] = rs.getString("id"); // Cambia 'id' por el nombre de la columna
+                fila[1] = rs.getString("nombre"); // Cambia 'nombre' por el nombre de la columna
+
+                modelo.addRow(fila); // Añadir la fila al modelo
+            }
+
+            // Asignar el modelo a la tabla
+            tabla.setModel(modelo);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.toString());
+        }
+    }
+}    
+
+
