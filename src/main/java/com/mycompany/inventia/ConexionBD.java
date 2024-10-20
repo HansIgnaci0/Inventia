@@ -33,7 +33,7 @@ public class ConexionBD {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             conectar=DriverManager.getConnection(cadena, usuario,contrasenia);
-            JOptionPane.showMessageDialog(null,"Se conectó a la base de datos");
+            
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"No se conectó a la base de datos, error: "+e.toString());
         }
@@ -41,49 +41,54 @@ public class ConexionBD {
     }
     
 public boolean bConexion(String usuario, String contrasenia) {
-    boolean booleanConexion;  // Declaramos la variable para guardar el estado de la conexión
+    boolean booleanConexion;  
     
     // Comparamos las cadenas correctamente usando equals()
     if (usuario.equals("root") && contrasenia.equals("ADMIN12341")) {
-        booleanConexion = true;  // Si las credenciales son correctas
+        booleanConexion = true;  
     } else {
-        booleanConexion = false;  // Si las credenciales son incorrectas
+        booleanConexion = false;  
     }
     
-    return booleanConexion;  // Devolvemos el resultado
+    return booleanConexion;  
 }
 
     Statement createStatement() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 public void listarProductos(JTable tabla, Connection conexion) {
-        // Crear el modelo de la tabla con dos columnas
-        DefaultTableModel modelo = new DefaultTableModel();
+    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+    
+    
+    modelo.setRowCount(0); 
+
+    
+    if (modelo.getColumnCount() == 0) {
         modelo.addColumn("ID Producto");
         modelo.addColumn("Nombre");
-
-        String query = "SELECT ID_PRODUCTO, NOMBRE FROM producto"; // Cambia 'producto' por el nombre de tu tabla
-        
-        try {
-            Statement stmt = conexion.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-
-            // Recorrer los resultados de la consulta
-            while (rs.next()) {
-                String[] fila = new String[2];
-                fila[0] = rs.getString("id"); // Cambia 'id' por el nombre de la columna
-                fila[1] = rs.getString("nombre"); // Cambia 'nombre' por el nombre de la columna
-
-                modelo.addRow(fila); // Añadir la fila al modelo
-            }
-
-            // Asignar el modelo a la tabla
-            tabla.setModel(modelo);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.toString());
-        }
+        modelo.addColumn("Precio");
     }
-}    
 
+    String query = "SELECT NOMBRE, PRECIO FROM producto"; 
+    
+    try {
+        Statement stmt = conexion.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        
+        while (rs.next()) {
+            String[] fila = new String[2];
+            fila[0] = rs.getString("NOMBRE");
+            fila[1] = String.valueOf(rs.getDouble("PRECIO"));
+
+            modelo.addRow(fila); 
+        }
+
+      
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+    }
+}
+}
 
