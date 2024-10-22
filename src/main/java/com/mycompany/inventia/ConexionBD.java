@@ -103,7 +103,7 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         }
 
         // Consulta SQL para obtener las ventas del día
-        String query = "SELECT producto, cantidad, precio, (cantidad * precio) AS total FROM ventas WHERE fecha = CURDATE()";
+        String query = "SELECT id_producto,cantidad, precio_unitario, (cantidad * precio_unitario) AS total FROM detalle_venta";
 
         try {
             Statement stmt = conexion.createStatement();
@@ -111,9 +111,9 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 
             while (rs.next()) {
                 String[] fila = new String[4];
-                fila[0] = rs.getString("producto");
+                fila[0] = rs.getString("id_producto");
                 fila[1] = String.valueOf(rs.getInt("cantidad"));
-                fila[2] = String.valueOf(rs.getDouble("precio"));
+                fila[2] = String.valueOf(rs.getDouble("precio_unitario"));
                 fila[3] = String.valueOf(rs.getDouble("total"));
 
                 modelo.addRow(fila); // Añadir la fila a la tabla
