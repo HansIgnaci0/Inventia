@@ -4,11 +4,17 @@
  */
 package Vistas;
 
+import com.mycompany.inventia.ConexionBD;
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author lttlk
  */
 public class Detalle extends javax.swing.JFrame {
+    
+    DefaultTableModel dtm = new DefaultTableModel();
+    ConexionBD cn = new ConexionBD(); 
 
 
     /**
@@ -16,8 +22,22 @@ public class Detalle extends javax.swing.JFrame {
      */
     public Detalle() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        
+        
+        String[] titulo = new String[] {"Producto", "Cantidad", "Precio", "Total"};
+        dtm.setColumnIdentifiers(titulo);
+        jTableDetalle.setModel(dtm);
+        
+        
+        listarDetalleDiario();//SELECT producto, cantidad, precio, (cantidad * precio) AS total FROM ventas WHERE fecha = CURDATE()
     }
-
+    
+    private void listarDetalleDiario() {
+        Connection conexion = cn.establecerConexion("root", "ADMIN12341");
+        cn.listarDetalleDiario(jTableDetalle, conexion);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,6 +50,9 @@ public class Detalle extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         BotonAtras = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableDetalle = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,34 +69,62 @@ public class Detalle extends javax.swing.JFrame {
             }
         });
 
+        jTableDetalle.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Producto", "Cantidad", "Precio", "Total"
+            }
+        ));
+        jScrollPane1.setViewportView(jTableDetalle);
+
+        jButton1.setText("Listar detalle");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(BotonAtras)
-                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel1))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(139, Short.MAX_VALUE))
+                        .addGap(20, 20, 20)
+                        .addComponent(BotonAtras)
+                        .addGap(143, 143, 143)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel1))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(97, 97, 97)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jButton1)))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(BotonAtras)))
+                    .addComponent(BotonAtras)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         pack();
@@ -82,8 +133,14 @@ public class Detalle extends javax.swing.JFrame {
     private void BotonAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAtrasActionPerformed
         // TODO add your handling code here:
 
-        this.dispose(); // Cerrar la ventana de ventas
+        this.dispose();
+        Mainn main=new Mainn();
+        main.setVisible(true);
     }//GEN-LAST:event_BotonAtrasActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -122,7 +179,10 @@ public class Detalle extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAtras;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableDetalle;
     // End of variables declaration//GEN-END:variables
 }

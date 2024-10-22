@@ -122,20 +122,26 @@ public class Mainn extends javax.swing.JFrame {
         Detalle Detalle = new Detalle();
     
         Detalle.setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-         EntradaProductos EntradaProductos = new EntradaProductos();
+        EntradaProductos EntradaProductos = new EntradaProductos();
     
         EntradaProductos.setVisible(true);
+
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-         Pedidos Pedidos = new Pedidos();
+        Pedidos Pedidos = new Pedidos();
     
         Pedidos.setVisible(true);
+
+        this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**

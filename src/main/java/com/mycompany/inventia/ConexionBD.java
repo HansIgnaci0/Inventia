@@ -90,5 +90,38 @@ public void listarProductos(JTable tabla, Connection conexion) {
         JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
     }
 }
+public void listarDetalleDiario(JTable tabla, Connection conexion) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla
+
+        // Definir las columnas del detalle diario
+        if (modelo.getColumnCount() == 0) {
+            modelo.addColumn("Producto");
+            modelo.addColumn("Cantidad");
+            modelo.addColumn("Precio");
+            modelo.addColumn("Total");
+        }
+
+        // Consulta SQL para obtener las ventas del día
+        String query = "SELECT producto, cantidad, precio, (cantidad * precio) AS total FROM ventas WHERE fecha = CURDATE()";
+
+        try {
+            Statement stmt = conexion.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String[] fila = new String[4];
+                fila[0] = rs.getString("producto");
+                fila[1] = String.valueOf(rs.getInt("cantidad"));
+                fila[2] = String.valueOf(rs.getDouble("precio"));
+                fila[3] = String.valueOf(rs.getDouble("total"));
+
+                modelo.addRow(fila); // Añadir la fila a la tabla
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al listar el detalle diario: " + e.getMessage());
+        }
+    }
 }
 

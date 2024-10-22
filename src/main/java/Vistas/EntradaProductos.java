@@ -19,6 +19,7 @@ public class EntradaProductos extends javax.swing.JFrame {
 
     public EntradaProductos() {
         initComponents();
+        this.setLocationRelativeTo(null);
         initTableModel();
         conexionBD = new ConexionBD();
         currencyFormat = NumberFormat.getCurrencyInstance();
@@ -243,6 +244,7 @@ public class EntradaProductos extends javax.swing.JFrame {
     }
 
     private void BotonAtrasActionPerformed(java.awt.event.ActionEvent evt) {
+        
         this.dispose();
         Mainn main = new Mainn();
         main.setVisible(true);
