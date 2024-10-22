@@ -21,6 +21,22 @@ public class ConexionBD {
     static Connection getConnection() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    public static void listarProductos(JTable jTable1, ConexionBD conexion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public static void eliminarProducto(int id, ConexionBD conexion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public static void modificarProducto(int id, String nombre, double precio, int cantidad, ConexionBD conexion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public static void agregarProducto(int id, String nombre, double precio, int cantidad, ConexionBD conexion) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     Connection conectar=null;
 
@@ -58,8 +74,6 @@ public boolean bConexion(String usuario, String contrasenia) {
     }
 public void listarProductos(JTable tabla, Connection conexion) {
     DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-    
-    
     modelo.setRowCount(0); 
 
     
@@ -121,6 +135,64 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al listar el detalle diario: " + e.getMessage());
+        }
+    }
+    public void listarTodosLosProductos(JTable tabla, Connection conexion) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.setRowCount(0);
+
+        String query = "SELECT ID, NOMBRE, PRECIO, CANTIDAD FROM producto"; 
+
+        try {
+            Statement stmt = conexion.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String[] fila = new String[4];
+                fila[0] = rs.getString("ID");
+                fila[1] = rs.getString("NOMBRE");
+                fila[2] = String.valueOf(rs.getDouble("PRECIO"));
+                fila[3] = String.valueOf(rs.getInt("CANTIDAD"));
+                modelo.addRow(fila);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+        }
+    }
+
+    public void agregarProducto(String nombre, double precio, int cantidad, Connection conexion) {
+        String query = "INSERT INTO producto (NOMBRE, PRECIO, CANTIDAD) VALUES ('" + nombre + "', " + precio + ", " + cantidad + ")";
+
+        try {
+            Statement stmt = conexion.createStatement();
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(null, "Producto agregado exitosamente.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al agregar el producto: " + e.getMessage());
+        }
+    }
+
+    public void modificarProducto(int id, String nombre, double precio, int cantidad, Connection conexion) {
+        String query = "UPDATE producto SET NOMBRE = '" + nombre + "', PRECIO = " + precio + ", CANTIDAD = " + cantidad + " WHERE ID = " + id;
+
+        try {
+            Statement stmt = conexion.createStatement();
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(null, "Producto modificado exitosamente.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al modificar el producto: " + e.getMessage());
+        }
+    }
+
+    public void eliminarProducto(int id, Connection conexion) {
+        String query = "DELETE FROM producto WHERE ID = " + id;
+
+        try {
+            Statement stmt = conexion.createStatement();
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar el producto: " + e.getMessage());
         }
     }
 }
