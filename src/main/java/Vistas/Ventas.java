@@ -62,6 +62,25 @@ public class Ventas extends javax.swing.JFrame {
     }
     totalLabel.setText("Total: $" + totalVenta);
     }
+    
+    private void restarTotal() {
+    int total = 0; // Iniciamos el total en 0
+
+    DefaultTableModel modelo = (DefaultTableModel) jTable3.getModel();
+    int numFilas = modelo.getRowCount(); // Número de filas en la tabla
+
+    // Recorremos todas las filas para recalcular el total
+    for (int i = 0; i < numFilas; i++) {
+        // Obtenemos el valor de la columna del "Total" (suponiendo que esté en la columna 3)
+        double subtotal = (double) modelo.getValueAt(i, 3);
+        total += subtotal;
+    }
+
+    // Actualizamos el label con el nuevo total
+    totalLabel.setText("Total: $" + total);
+}
+
+
     Ventas(Mainn aThis) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -159,8 +178,6 @@ public class Ventas extends javax.swing.JFrame {
                 RestarActionPerformed(evt);
             }
         });
-
-        totalLabel.setText("jLabel3");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -285,14 +302,29 @@ public class Ventas extends javax.swing.JFrame {
 
     private void ImprimirButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirButonActionPerformed
         // TODO add your handling code here:
-        
+        int opcion=JOptionPane.showConfirmDialog(null, "¿Hacer la venta?");
+        if (opcion == JOptionPane.YES_OPTION){
+            int i=1;
+            jTable3.getValueAt(i, opcion);
+            
+        }else if(opcion == JOptionPane.NO_OPTION){
+            System.out.println("no");
+        }
     }//GEN-LAST:event_ImprimirButonActionPerformed
 
     private void RestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestarActionPerformed
         // TODO add your handling code here:
     int filaSeleccionada = jTable3.getSelectedRow();
+if (filaSeleccionada != -1) {
     DefaultTableModel modelo = (DefaultTableModel) jTable3.getModel();
-    modelo.removeRow(filaSeleccionada);
+    modelo.removeRow(filaSeleccionada); // Eliminar la fila seleccionada
+
+    // Llamar al método para recalcular y actualizar el total
+    restarTotal();
+} else {
+    JOptionPane.showMessageDialog(null, "Seleccione una fila para eliminar.");
+}
+
     }//GEN-LAST:event_RestarActionPerformed
 
     /**

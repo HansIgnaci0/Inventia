@@ -209,9 +209,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="totalLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel3"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>

@@ -6,7 +6,9 @@ package com.mycompany.inventia;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -104,6 +106,8 @@ public void listarProductos(JTable tabla, Connection conexion) {
         JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
     }
 }
+
+
 public void listarDetalleDiario(JTable tabla, Connection conexion) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         modelo.setRowCount(0); // Limpiar la tabla
@@ -159,6 +163,22 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
             JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
         }
     }
+    
+    public void agregarVenta(int id_producto, int cantidad, int precio){
+    String query = "INSERT INTO detalle_venta (ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES (?, ?, ?)";
+    
+    try {
+        PreparedStatement ps = conectar.prepareStatement(query);
+        ps.setInt(1, id_producto);
+        ps.setInt(2, cantidad);
+        ps.setInt(3, precio);
+        ps.executeUpdate();
+        ps.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 
     public void agregarProducto(String nombre, double precio, int cantidad, Connection conexion) {
         String query = "INSERT INTO producto (NOMBRE, PRECIO, CANTIDAD) VALUES ('" + nombre + "', " + precio + ", " + cantidad + ")";
