@@ -164,14 +164,14 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         }
     }
     
-    public void agregarVenta(int id_producto, int cantidad, int precio){
+    public void agregarVenta(int id_producto, int cantidad, double precio){
     String query = "INSERT INTO detalle_venta (ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES (?, ?, ?)";
     
     try {
         PreparedStatement ps = conectar.prepareStatement(query);
         ps.setInt(1, id_producto);
         ps.setInt(2, cantidad);
-        ps.setInt(3, precio);
+        ps.setDouble(3, precio);
         ps.executeUpdate();
         ps.close();
     } catch (SQLException e) {

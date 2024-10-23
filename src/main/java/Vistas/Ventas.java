@@ -302,14 +302,25 @@ public class Ventas extends javax.swing.JFrame {
 
     private void ImprimirButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirButonActionPerformed
         // TODO add your handling code here:
-        int opcion=JOptionPane.showConfirmDialog(null, "¿Hacer la venta?");
-        if (opcion == JOptionPane.YES_OPTION){
-            int i=1;
-            jTable3.getValueAt(i, opcion);
-            
-        }else if(opcion == JOptionPane.NO_OPTION){
-            System.out.println("no");
+        int opcion = JOptionPane.showConfirmDialog(null, "¿Hacer la venta?");
+
+    // Si el usuario elige YES_OPTION
+    if (opcion == JOptionPane.YES_OPTION) {
+        // Recorre cada fila de jTable3
+        for (int i = 0; i < jTable3.getRowCount(); i++) {
+            // Obtiene la cantidad, precio y total de cada fila
+            int numero=1;
+            int cantidad = (Integer) jTable3.getValueAt(i, 1);
+            double precio = (Double) jTable3.getValueAt(i, 2);
+            double total = (Double) jTable3.getValueAt(i, 3);
+
+            // Imprime los valores de cantidad, precio y total
+            System.out.println("Cantidad: " + cantidad + ", Precio: " + precio + ", Total: " + total);
+            cn.agregarVenta(numero, cantidad, precio);
         }
+    } else if (opcion == JOptionPane.NO_OPTION) {
+        System.out.println("No se realizó la venta.");
+    }
     }//GEN-LAST:event_ImprimirButonActionPerformed
 
     private void RestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestarActionPerformed
