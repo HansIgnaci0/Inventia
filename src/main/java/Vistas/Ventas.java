@@ -55,7 +55,13 @@ public class Ventas extends javax.swing.JFrame {
         }
     }
 
-
+    private void sumatotal(){
+        double totalVenta = 0;
+    for (int i = 0; i < jTable3.getRowCount(); i++) {
+        totalVenta += (double) jTable3.getValueAt(i, 3); 
+    }
+    totalLabel.setText("Total: $" + totalVenta);
+    }
     Ventas(Mainn aThis) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -79,6 +85,8 @@ public class Ventas extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
         ImprimirButon = new javax.swing.JButton();
+        Restar = new javax.swing.JButton();
+        totalLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -139,6 +147,20 @@ public class Ventas extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable3);
 
         ImprimirButon.setText("Imprimir");
+        ImprimirButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ImprimirButonActionPerformed(evt);
+            }
+        });
+
+        Restar.setText("<-");
+        Restar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RestarActionPerformed(evt);
+            }
+        });
+
+        totalLabel.setText("jLabel3");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -158,14 +180,21 @@ public class Ventas extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(Sumar)
-                                .addGap(22, 22, 22)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(235, 235, 235)
+                                .addGap(238, 238, 238)
                                 .addComponent(ImprimirButon)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(Sumar)
+                                    .addComponent(Restar))
+                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(118, 118, 118)
+                                        .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE))))))
                 .addGap(37, 37, 37)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31))
@@ -177,18 +206,22 @@ public class Ventas extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(BotonAtras))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(jButton1)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(161, 161, 161)
-                                .addComponent(Sumar))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(90, 90, 90)
+                                .addComponent(Sumar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(Restar)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ImprimirButon))
+                        .addComponent(totalLabel)
+                        .addGap(23, 23, 23)
+                        .addComponent(ImprimirButon, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,31 +257,43 @@ public class Ventas extends javax.swing.JFrame {
     private void SumarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumarActionPerformed
         // TODO add your handling code here:
         // Botón para agregar a la boleta
-        int filaSeleccionada = jTable2.getSelectedRow(); // Captura la fila seleccionada
-        if (filaSeleccionada != -1) {
-            String nombreProducto = (String) jTable2.getValueAt(filaSeleccionada, 0); // Columna de nombre
-            double precioProducto = Double.parseDouble(jTable2.getValueAt(filaSeleccionada, 1).toString()); // Columna de precio
+        int filaSeleccionada = jTable2.getSelectedRow(); 
+    if (filaSeleccionada != -1) {
+        String nombreProducto = (String) jTable2.getValueAt(filaSeleccionada, 0); 
+        double precioProducto = Double.parseDouble(jTable2.getValueAt(filaSeleccionada, 1).toString()); 
 
-            // Solicitar la cantidad del producto
-            String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad para " + nombreProducto);
-            if (cantidadStr != null && !cantidadStr.trim().isEmpty()) {
-                try {
-                    int cantidad = Integer.parseInt(cantidadStr);
-                    double total = cantidad * precioProducto;
+        String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad para " + nombreProducto);
+        if (cantidadStr != null && !cantidadStr.trim().isEmpty()) {
+            try {
+                int cantidad = Integer.parseInt(cantidadStr);
+                double total = cantidad * precioProducto;
 
-                    // Agregar a la tabla de boleta
-                    DefaultTableModel modeloBoleta = (DefaultTableModel) jTable3.getModel();
-                    modeloBoleta.addRow(new Object[]{nombreProducto, cantidad, precioProducto, total});
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida");
-                }
+                DefaultTableModel modeloBoleta = (DefaultTableModel) jTable3.getModel();
+                modeloBoleta.addRow(new Object[]{nombreProducto, cantidad, precioProducto, total});
+
+                sumatotal(); // Recalcula el total
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla");
         }
+    } else {
+        JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla");
+    }
     
 
     }//GEN-LAST:event_SumarActionPerformed
+
+    private void ImprimirButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirButonActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_ImprimirButonActionPerformed
+
+    private void RestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestarActionPerformed
+        // TODO add your handling code here:
+    int filaSeleccionada = jTable3.getSelectedRow();
+    DefaultTableModel modelo = (DefaultTableModel) jTable3.getModel();
+    modelo.removeRow(filaSeleccionada);
+    }//GEN-LAST:event_RestarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,6 +335,7 @@ public class Ventas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAtras;
     private javax.swing.JButton ImprimirButon;
+    private javax.swing.JButton Restar;
     private javax.swing.JButton Sumar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
@@ -297,6 +343,7 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
+    private javax.swing.JLabel totalLabel;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 
