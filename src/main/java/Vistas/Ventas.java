@@ -7,6 +7,7 @@ import com.mycompany.inventia.ConexionBD;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -16,7 +17,8 @@ import javax.swing.table.TableRowSorter;
  */
 public class Ventas extends javax.swing.JFrame {
 
-    DefaultTableModel dtm = new DefaultTableModel();
+    DefaultTableModel modeloProductos = new DefaultTableModel();
+    DefaultTableModel modeloBoleta = new DefaultTableModel();
     TableRowSorter<DefaultTableModel> sorter;
     ConexionBD cn = new ConexionBD();
     /**
@@ -26,10 +28,15 @@ public class Ventas extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         String[] titulo = new String[] {"Producto", "Precio"};
-    dtm.setColumnIdentifiers(titulo);
-    jTable2.setModel(dtm); 
-
-    sorter = new TableRowSorter<>(dtm);
+    modeloProductos.setColumnIdentifiers(titulo);
+    jTable2.setModel(modeloProductos); 
+    
+    String[] titulo2=new String[]{"Producto","Cantidad","Precio Unitario","Total"};
+    modeloBoleta.setColumnIdentifiers(titulo2);
+    jTable3.setModel(modeloBoleta);
+    
+    
+    sorter = new TableRowSorter<>(modeloProductos);
     jTable2.setRowSorter(sorter);
         
         txtBuscar.addKeyListener(new KeyAdapter() {
@@ -68,10 +75,13 @@ public class Ventas extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         txtBuscar = new javax.swing.JTextField();
+        Sumar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setFont(new java.awt.Font("Constantia", 0, 36)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Constantia", 0, 52)); // NOI18N
         jLabel2.setText("Inventia");
 
         BotonAtras.setText("Atras");
@@ -107,6 +117,26 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
 
+        Sumar.setText("->");
+        Sumar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SumarActionPerformed(evt);
+            }
+        });
+
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable3);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -117,15 +147,19 @@ public class Ventas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(42, 42, 42)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Sumar)
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)))
+                .addGap(37, 37, 37)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,15 +169,23 @@ public class Ventas extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(BotonAtras))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(23, 23, 23)
+                        .addComponent(jButton1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(161, 161, 161)
+                                .addComponent(Sumar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
 
@@ -167,6 +209,35 @@ public class Ventas extends javax.swing.JFrame {
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void SumarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SumarActionPerformed
+        // TODO add your handling code here:
+        // Botón para agregar a la boleta
+        int filaSeleccionada = jTable2.getSelectedRow(); // Captura la fila seleccionada
+        if (filaSeleccionada != -1) {
+            String nombreProducto = (String) jTable2.getValueAt(filaSeleccionada, 0); // Columna de nombre
+            double precioProducto = Double.parseDouble(jTable2.getValueAt(filaSeleccionada, 1).toString()); // Columna de precio
+
+            // Solicitar la cantidad del producto
+            String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad para " + nombreProducto);
+            if (cantidadStr != null && !cantidadStr.trim().isEmpty()) {
+                try {
+                    int cantidad = Integer.parseInt(cantidadStr);
+                    double total = cantidad * precioProducto;
+
+                    // Agregar a la tabla de boleta
+                    DefaultTableModel modeloBoleta = (DefaultTableModel) jTable3.getModel();
+                    modeloBoleta.addRow(new Object[]{nombreProducto, cantidad, precioProducto, total});
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla");
+        }
+    
+
+    }//GEN-LAST:event_SumarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,14 +274,19 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAtras;
+    private javax.swing.JButton Sumar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
+
 
 }
