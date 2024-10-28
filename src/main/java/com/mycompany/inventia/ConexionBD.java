@@ -180,40 +180,90 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 }
 
 
-    public void agregarProducto(String nombre, double precio, int cantidad, Connection conexion) {
-        String query = "INSERT INTO producto (NOMBRE, PRECIO, CANTIDAD) VALUES ('" + nombre + "', " + precio + ", " + cantidad + ")";
-
-        try {
-            Statement stmt = conexion.createStatement();
-            stmt.executeUpdate(query);
-            JOptionPane.showMessageDialog(null, "Producto agregado exitosamente.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al agregar el producto: " + e.getMessage());
+    public void agregarProducto(String nombre, double precio, int cantidad, int id_producto) {
+        String query = "INSERT INTO producto (ID_PRODUCTO, NOMBRE, CANTIDAD, PRECIO) VALUES (?, ?, ?, ?)"; 
+            try {
+        PreparedStatement ps = conectar.prepareStatement(query);
+        ps.setInt(1, id_producto);
+        ps.setString(2, nombre);
+        ps.setInt(3, cantidad);
+        ps.setDouble(4, precio);
+        
+        ps.executeUpdate();
+        ps.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    
         }
     }
 
-    public void modificarProducto(int id, String nombre, double precio, int cantidad, Connection conexion) {
-        String query = "UPDATE producto SET NOMBRE = '" + nombre + "', PRECIO = " + precio + ", CANTIDAD = " + cantidad + " WHERE ID = " + id;
-
+    public void modificarProducto(int id_producto, String nombre, double precio, int cantidad) {
+        String query = "UPDATE producto SET NOMBRE = ?, PRECIO = ?, CANTIDAD = ? WHERE ID_PRODUCTO = ?";
         try {
-            Statement stmt = conexion.createStatement();
-            stmt.executeUpdate(query);
+            PreparedStatement ps = conectar.prepareStatement(query);
+            ps.setString(1, nombre);
+            ps.setDouble(2, precio);
+            ps.setInt(3, cantidad);
+            ps.setInt(4, id_producto);
+
+            ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Producto modificado exitosamente.");
-        } catch (Exception e) {
+            ps.close();
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al modificar el producto: " + e.getMessage());
         }
     }
 
-    public void eliminarProducto(int id, Connection conexion) {
-        String query = "DELETE FROM producto WHERE ID = " + id;
+    public void eliminarProducto(int id_producto) {
+        String query = "DELETE FROM producto WHERE ID_PRODUCTO = ?";
 
         try {
-            Statement stmt = conexion.createStatement();
-            stmt.executeUpdate(query);
-            JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente.");
-        } catch (Exception e) {
+            PreparedStatement ps = conectar.prepareStatement(query);
+            ps.setInt(1, id_producto);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontró un producto con el ID especificado.");
+            }
+
+            ps.close();
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al eliminar el producto: " + e.getMessage());
         }
     }
+    public void listarEntradaProducto(JTable tabla, Connection conexion) {
+    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+    modelo.setRowCount(0);
+
+    // Definir las columnas de la tabla
+    if (modelo.getColumnCount() == 0) {
+        modelo.addColumn("ID Producto");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Cantidad"); // Incluyendo cantidad si es necesario
+    }
+
+    String query = "SELECT ID_PRODUCTO, NOMBRE, PRECIO, CANTIDAD FROM producto";
+
+    try {
+        Statement stmt = conexion.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        // Llenar las filas de la tabla
+        while (rs.next()) {
+            String[] fila = new String[4];
+            fila[0] = String.valueOf(rs.getInt("ID_PRODUCTO"));
+            fila[1] = rs.getString("NOMBRE");
+            fila[2] = String.valueOf(rs.getDouble("PRECIO"));
+            fila[3] = String.valueOf(rs.getInt("CANTIDAD")); // Incluyendo cantidad si es necesario
+
+            modelo.addRow(fila);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+    }
+}
 }
 

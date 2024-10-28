@@ -15,6 +15,8 @@ import javax.swing.JTable;
 public class EntradaProductos extends javax.swing.JFrame {
     private ConexionBD conexion;
     private Connection conn;
+            ConexionBD con = new ConexionBD();
+
 
     /**
      * 
@@ -22,17 +24,8 @@ public class EntradaProductos extends javax.swing.JFrame {
      */
     public EntradaProductos() {
         initComponents();
-        conexion = new ConexionBD();
-        conn = conexion.establecerConexion("root", "ADMIN12341"); // Ajusta las credenciales según sea necesario
-        listarProductos();
     }
-        private void listarProductos() {
-        if (conn != null) {
-            conexion.listarProductos(jTable1, conn);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error de conexión a la base de datos.");
-        }
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -227,9 +220,8 @@ public class EntradaProductos extends javax.swing.JFrame {
         String nombre = TextfNombre.getText();
         double precio = Double.parseDouble(TextfPrecio.getText());
         int cantidad = Integer.parseInt(TextfCantidad.getText());
-
-        ConexionBD.agregarProducto(id, nombre, precio, cantidad, conexion);
-        BotonListarActionPerformed(evt); // Actualizar la tabla
+        Connection conexion = con.establecerConexion("root", "ADMIN12341");
+        con.agregarProducto(nombre, precio, cantidad, id);
     }//GEN-LAST:event_BotonAgregarActionPerformed
 
     private void TextfNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextfNombreActionPerformed
@@ -245,23 +237,20 @@ public class EntradaProductos extends javax.swing.JFrame {
         String nombre = TextfNombre.getText();
         double precio = Double.parseDouble(TextfPrecio.getText());
         int cantidad = Integer.parseInt(TextfCantidad.getText());
-
-        ConexionBD.modificarProducto(id, nombre, precio, cantidad, conexion);
-        BotonListarActionPerformed(evt); // Actualizar la tabla
+        Connection conexion = con.establecerConexion("root", "ADMIN12341");
+        con.modificarProducto(id, nombre, precio, cantidad);
     }//GEN-LAST:event_BotonModificarActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
         int id = Integer.parseInt(TextfID.getText());
-        ConexionBD.eliminarProducto(id, conexion);
-        BotonListarActionPerformed(evt); // Actualizar la tabla
+        Connection conexion = con.establecerConexion("root", "ADMIN12341");
+        con.eliminarProducto(id);
     }//GEN-LAST:event_BotonEliminarActionPerformed
 
     private void BotonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonListarActionPerformed
-        if (conexion != null) {
-            ConexionBD.listarProductos(jTable1, conexion);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al conectar a la base de datos.");
-        }
+        Connection conexion = con.establecerConexion("root", "ADMIN12341");
+        con.listarEntradaProducto(jTable1, conexion);
+
     }//GEN-LAST:event_BotonListarActionPerformed
 
     /**
