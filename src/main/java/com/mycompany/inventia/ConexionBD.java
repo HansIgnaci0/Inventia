@@ -181,7 +181,7 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 
 
     public void agregarProducto(String nombre, double precio, int cantidad, int id_producto) {
-        String query = "INSERT INTO producto (ID_PRODUCTO, NOMBRE, CANTIDAD, PRECIO) VALUES (?, ?, ?, ?)"; 
+        String query = "INSERT INTO producto (ID_PRODUCTO, NOMBRE, STOCK, PRECIO) VALUES (?, ?, ?, ?)"; 
             try {
         PreparedStatement ps = conectar.prepareStatement(query);
         ps.setInt(1, id_producto);
@@ -245,7 +245,7 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         modelo.addColumn("Cantidad"); // Incluyendo cantidad si es necesario
     }
 
-    String query = "SELECT ID_PRODUCTO, NOMBRE, PRECIO, CANTIDAD FROM producto";
+    String query = "SELECT ID_PRODUCTO, NOMBRE, PRECIO,STOCK  FROM producto";
 
     try {
         Statement stmt = conexion.createStatement();
@@ -257,7 +257,7 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
             fila[0] = String.valueOf(rs.getInt("ID_PRODUCTO"));
             fila[1] = rs.getString("NOMBRE");
             fila[2] = String.valueOf(rs.getDouble("PRECIO"));
-            fila[3] = String.valueOf(rs.getInt("CANTIDAD")); // Incluyendo cantidad si es necesario
+            fila[3] = String.valueOf(rs.getInt("STOCK")); // Incluyendo cantidad si es necesario
 
             modelo.addRow(fila);
         }

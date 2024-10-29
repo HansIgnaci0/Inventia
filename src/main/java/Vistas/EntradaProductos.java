@@ -222,6 +222,7 @@ public class EntradaProductos extends javax.swing.JFrame {
         int cantidad = Integer.parseInt(TextfCantidad.getText());
         Connection conexion = con.establecerConexion("root", "ADMIN12341");
         con.agregarProducto(nombre, precio, cantidad, id);
+        con.listarEntradaProducto(jTable1, conexion);
     }//GEN-LAST:event_BotonAgregarActionPerformed
 
     private void TextfNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextfNombreActionPerformed
@@ -245,6 +246,7 @@ public class EntradaProductos extends javax.swing.JFrame {
         int id = Integer.parseInt(TextfID.getText());
         Connection conexion = con.establecerConexion("root", "ADMIN12341");
         con.eliminarProducto(id);
+        con.listarEntradaProducto(jTable1, conexion);
     }//GEN-LAST:event_BotonEliminarActionPerformed
 
     private void BotonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonListarActionPerformed
