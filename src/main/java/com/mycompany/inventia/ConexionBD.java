@@ -198,7 +198,7 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
     }
 
     public void modificarProducto(int id_producto, String nombre, double precio, int cantidad) {
-        String query = "UPDATE producto SET NOMBRE = ?, PRECIO = ?, CANTIDAD = ? WHERE ID_PRODUCTO = ?";
+        String query = "UPDATE producto SET NOMBRE = ?, PRECIO = ?, STOCK = ? WHERE ID_PRODUCTO = ?";
         try {
             PreparedStatement ps = conectar.prepareStatement(query);
             ps.setString(1, nombre);

@@ -240,6 +240,7 @@ public class EntradaProductos extends javax.swing.JFrame {
         int cantidad = Integer.parseInt(TextfCantidad.getText());
         Connection conexion = con.establecerConexion("root", "ADMIN12341");
         con.modificarProducto(id, nombre, precio, cantidad);
+        con.listarEntradaProducto(jTable1, conexion);
     }//GEN-LAST:event_BotonModificarActionPerformed
 
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
