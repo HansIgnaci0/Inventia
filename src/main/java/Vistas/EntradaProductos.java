@@ -24,6 +24,7 @@ public class EntradaProductos extends javax.swing.JFrame {
      */
     public EntradaProductos() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
 

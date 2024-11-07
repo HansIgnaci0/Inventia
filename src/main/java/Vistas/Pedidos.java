@@ -97,7 +97,7 @@ public class Pedidos extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        BotonAgregar.setText("jButton1");
+        BotonAgregar.setText("Agregar");
         BotonAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAgregarActionPerformed(evt);
