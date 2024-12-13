@@ -326,11 +326,10 @@ public class Ventas extends javax.swing.JFrame {
         Date fechaSQL = Date.valueOf(fechaActual);
         
         
-        
         for (int i = 0; i < jTable3.getRowCount(); i++) {
 
             
-            
+   
             int Idproducto = 1;
             int idtrabajador=2;
             int cantidad = (Integer) jTable3.getValueAt(i, 1);

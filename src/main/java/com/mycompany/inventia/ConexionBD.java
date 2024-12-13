@@ -175,9 +175,10 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
     
    public void agregarVenta(int id_producto, int idtrabajor,int cantidad, double precio, Date fecha) {
     // La secuencia idDetalleVenta_SEQ.NEXTVAL se maneja directamente en la consulta
-    String query = "INSERT INTO detalleventa (idDetalleVenta, idProducto,idTrabajador,cantidadProductosVendidos, subTotal, fechaVenta) "
-            + "VALUES (idDetalleVenta_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
-    
+        double subTotal = cantidad * precio;
+        String query = "INSERT INTO detalleventa (idProducto, idTrabajador, cantidadProductosVendidos, subTotal, fechaVenta) "
+        + "VALUES (?, ?, ?, ?, ?)";
+        
     try {
         // Preparar la consulta con los parámetros
         PreparedStatement ps = conectar.prepareStatement(query);
@@ -186,14 +187,25 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         ps.setInt(1, id_producto);   // Establece el id_producto
         ps.setInt(2, cantidad);      // Establece la cantidad de productos vendidos
         ps.setInt(3, idtrabajor);    // Establece el id del trabajador (en caso que sea necesario)
-        ps.setDouble(4, precio);     // Establece el precio (subTotal)
+        ps.setDouble(4, subTotal);     // Establece el precio (subTotal)
         ps.setDate(5, fecha);        // Establece la fecha de la venta
 
         // Ejecutar la consulta
-        ps.executeUpdate();
+        int datosIngresados = ps.executeUpdate();
+        if (datosIngresados > 0) {
+            JOptionPane.showMessageDialog(null, 
+                    "¡La venta se realizó con éxito!", 
+                    "Éxito", 
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, 
+                    "No se pudo realizar la venta.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+        }
         ps.close();
     } catch (SQLException e) {
-        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al imprimir los datos: " + e.getMessage());
     }
 }
 
