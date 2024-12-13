@@ -173,9 +173,9 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         }
     }
     
-   public void agregarVenta(int id_producto, int idtrabajor,int cantidad, double precio, Date fecha) {
+   public void agregarVenta(int id_producto, int idtrabajor,int cantidad, double precio,double subTotal, Date fecha) {
     // La secuencia idDetalleVenta_SEQ.NEXTVAL se maneja directamente en la consulta
-        double subTotal = cantidad * precio;
+        
         String query = "INSERT INTO detalleventa (idProducto, idTrabajador, cantidadProductosVendidos, subTotal, fechaVenta) "
         + "VALUES (?, ?, ?, ?, ?)";
         

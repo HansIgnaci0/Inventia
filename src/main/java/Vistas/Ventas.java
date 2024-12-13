@@ -334,10 +334,10 @@ public class Ventas extends javax.swing.JFrame {
             int idtrabajador=2;
             int cantidad = (Integer) jTable3.getValueAt(i, 1);
             double precio = (Double) jTable3.getValueAt(i, 2);
-            double total = (Double) jTable3.getValueAt(i, 3);
+            double  total= cantidad * precio;
 
             System.out.println("Cantidad: " + cantidad + ", Precio: " + precio + ", Total: " + total);
-            cn.agregarVenta(Idproducto,cantidad,idtrabajador,precio,fechaSQL);
+            cn.agregarVenta(Idproducto,cantidad,idtrabajador,precio,total,fechaSQL);
         }
     } else if (opcion == JOptionPane.NO_OPTION) {
         System.out.println("No se realizó la venta.");
