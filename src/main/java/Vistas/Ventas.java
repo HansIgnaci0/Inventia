@@ -7,6 +7,8 @@ import com.mycompany.inventia.ConexionBD;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.sql.Date;
+import java.time.LocalDate;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -106,6 +108,7 @@ public class Ventas extends javax.swing.JFrame {
         ImprimirButon = new javax.swing.JButton();
         Restar = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -179,6 +182,13 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,7 +207,9 @@ public class Ventas extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(238, 238, 238)
+                                .addGap(55, 55, 55)
+                                .addComponent(jButton2)
+                                .addGap(108, 108, 108)
                                 .addComponent(ImprimirButon)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
@@ -238,7 +250,9 @@ public class Ventas extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(totalLabel)
                         .addGap(23, 23, 23)
-                        .addComponent(ImprimirButon, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ImprimirButon, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,17 +320,25 @@ public class Ventas extends javax.swing.JFrame {
 
     // Si el usuario elige YES_OPTION
     if (opcion == JOptionPane.YES_OPTION) {
-        // Recorre cada fila de jTable3
+        
+        
+        LocalDate fechaActual = LocalDate.now();
+        Date fechaSQL = Date.valueOf(fechaActual);
+        
+        
+        
         for (int i = 0; i < jTable3.getRowCount(); i++) {
-            // Obtiene la cantidad, precio y total de cada fila
-            int numero=1;
+
+            
+            
+            int Idproducto = 1;
+            int idtrabajador=2;
             int cantidad = (Integer) jTable3.getValueAt(i, 1);
             double precio = (Double) jTable3.getValueAt(i, 2);
             double total = (Double) jTable3.getValueAt(i, 3);
 
-            // Imprime los valores de cantidad, precio y total
             System.out.println("Cantidad: " + cantidad + ", Precio: " + precio + ", Total: " + total);
-            cn.agregarVenta(numero, cantidad, precio);
+            cn.agregarVenta(Idproducto,cantidad,idtrabajador,precio,fechaSQL);
         }
     } else if (opcion == JOptionPane.NO_OPTION) {
         System.out.println("No se realizó la venta.");
@@ -337,6 +359,12 @@ if (filaSeleccionada != -1) {
 }
 
     }//GEN-LAST:event_RestarActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int recorridos;
+        recorridos=jTable3.getRowCount();
+        System.out.println(recorridos);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -381,6 +409,7 @@ if (filaSeleccionada != -1) {
     private javax.swing.JButton Restar;
     private javax.swing.JButton Sumar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

@@ -5,14 +5,17 @@
 package com.mycompany.inventia;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -40,20 +43,26 @@ public class ConexionBD {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    Connection conectar=null;
+    private Connection conectar = null;
 
-    String bd="dbinventia";
-    String ip="localhost";
-    String puerto="3306";
-    String cadena="jdbc:mysql://"+ip+":"+puerto+"/"+bd;
-    
-    public Connection establecerConexion(String usuario,String contrasenia){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conectar=DriverManager.getConnection(cadena, usuario,contrasenia);
+    private final String bd = "dbinventia";
+    private final String ip = "localhost";
+    private final String puerto = "3306";
+    private final String cadena = "jdbc:mysql://" + ip + ":" + puerto + "/" + bd + 
+                                   "?useTimezone=true&serverTimezone=UTC";
+
+    public Connection establecerConexion(String usuario, String contrasenia) {
+        try {
+            // Cambia a la clase moderna del driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // Establece la conexión
+            conectar = DriverManager.getConnection(cadena, usuario, contrasenia);
             
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"No se conectó a la base de datos, error: "+e.toString());
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "No se encontró el Driver: " + e.getMessage());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al conectar a la base de datos: " + e.getMessage());
+            e.printStackTrace(); // Esto imprime el detalle del error en la consola
         }
         return conectar;
     }
@@ -85,7 +94,7 @@ public void listarProductos(JTable tabla, Connection conexion) {
         modelo.addColumn("Precio");
     }
 
-    String query = "SELECT NOMBRE, PRECIO FROM producto"; 
+    String query = "SELECT nombreProducto, precioUnitarioProducto FROM producto"; 
     
     try {
         Statement stmt = conexion.createStatement();
@@ -94,8 +103,8 @@ public void listarProductos(JTable tabla, Connection conexion) {
         
         while (rs.next()) {
             String[] fila = new String[2];
-            fila[0] = rs.getString("NOMBRE");
-            fila[1] = String.valueOf(rs.getDouble("PRECIO"));
+            fila[0] = rs.getString("nombreProducto");
+            fila[1] = String.valueOf(rs.getDouble("precioUnitarioProducto"));
 
             modelo.addRow(fila); 
         }
@@ -164,20 +173,30 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         }
     }
     
-    public void agregarVenta(int id_producto, int cantidad, double precio){
-    String query = "INSERT INTO detalle_venta (ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO) VALUES (?, ?, ?)";
+   public void agregarVenta(int id_producto, int idtrabajor,int cantidad, double precio, Date fecha) {
+    // La secuencia idDetalleVenta_SEQ.NEXTVAL se maneja directamente en la consulta
+    String query = "INSERT INTO detalleventa (idDetalleVenta, idProducto,idTrabajador,cantidadProductosVendidos, subTotal, fechaVenta) "
+            + "VALUES (idDetalleVenta_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
     
     try {
+        // Preparar la consulta con los parámetros
         PreparedStatement ps = conectar.prepareStatement(query);
-        ps.setInt(1, id_producto);
-        ps.setInt(2, cantidad);
-        ps.setDouble(3, precio);
+        
+        // Asignación de parámetros
+        ps.setInt(1, id_producto);   // Establece el id_producto
+        ps.setInt(2, cantidad);      // Establece la cantidad de productos vendidos
+        ps.setInt(3, idtrabajor);    // Establece el id del trabajador (en caso que sea necesario)
+        ps.setDouble(4, precio);     // Establece el precio (subTotal)
+        ps.setDate(5, fecha);        // Establece la fecha de la venta
+
+        // Ejecutar la consulta
         ps.executeUpdate();
         ps.close();
     } catch (SQLException e) {
         e.printStackTrace();
     }
 }
+
 
 
     public void agregarProducto(String nombre, double precio, int cantidad, int id_producto) {
