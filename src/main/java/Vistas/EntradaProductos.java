@@ -18,6 +18,7 @@ public class EntradaProductos extends javax.swing.JFrame {
     private Connection conn;
             ConexionBD con = new ConexionBD();
     DefaultTableModel modeloProductos = new DefaultTableModel();
+    
 
 
     /**
@@ -29,7 +30,10 @@ public class EntradaProductos extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         String[] titulo = new String[] {"Producto", "Precio","Stock"};
     modeloProductos.setColumnIdentifiers(titulo);
-    jTable1.setModel(modeloProductos); 
+    jTable1.setModel(modeloProductos);
+    Connection conexion = con.establecerConexion("root", "ADMIN12341");
+    con.listarEntradaProducto(jTable1, conexion);
+    
     }
 
 
@@ -42,7 +46,6 @@ public class EntradaProductos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        BotonListar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         BotonAgregar = new javax.swing.JButton();
@@ -50,13 +53,6 @@ public class EntradaProductos extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        BotonListar.setText("Listar");
-        BotonListar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonListarActionPerformed(evt);
-            }
-        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -98,12 +94,9 @@ public class EntradaProductos extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BotonAgregar)
-                        .addGap(152, 152, 152)
-                        .addComponent(BotonListar))
+                    .addComponent(BotonAgregar)
                     .addComponent(jButton1))
-                .addGap(14, 14, 14))
+                .addGap(229, 229, 229))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,9 +106,7 @@ public class EntradaProductos extends javax.swing.JFrame {
                         .addGap(5, 5, 5)
                         .addComponent(BotonAtras)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BotonAgregar)
-                            .addComponent(BotonListar))
+                        .addComponent(BotonAgregar)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
@@ -167,12 +158,6 @@ public class EntradaProductos extends javax.swing.JFrame {
 
     }//GEN-LAST:event_BotonAgregarActionPerformed
 
-    private void BotonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonListarActionPerformed
-        Connection conexion = con.establecerConexion("root", "ADMIN12341");
-        con.listarEntradaProducto(jTable1, conexion);
-
-    }//GEN-LAST:event_BotonListarActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -211,7 +196,6 @@ public class EntradaProductos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAgregar;
     private javax.swing.JButton BotonAtras;
-    private javax.swing.JButton BotonListar;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

@@ -29,6 +29,7 @@ public class Ventas extends javax.swing.JFrame {
     public Ventas() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
         String[] titulo = new String[] {"Producto", "Precio"};
     modeloProductos.setColumnIdentifiers(titulo);
     jTable2.setModel(modeloProductos); 
@@ -36,7 +37,8 @@ public class Ventas extends javax.swing.JFrame {
     String[] titulo2=new String[]{"Producto","Cantidad","Precio Unitario","Total"};
     modeloBoleta.setColumnIdentifiers(titulo2);
     jTable3.setModel(modeloBoleta);
-    
+    Connection conexion = cn.establecerConexion("root", "ADMIN12341");
+        cn.listarProductos(jTable2, conexion);
     
     sorter = new TableRowSorter<>(modeloProductos);
     jTable2.setRowSorter(sorter);
@@ -100,7 +102,6 @@ public class Ventas extends javax.swing.JFrame {
         BotonAtras = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
         txtBuscar = new javax.swing.JTextField();
         Sumar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -108,7 +109,6 @@ public class Ventas extends javax.swing.JFrame {
         ImprimirButon = new javax.swing.JButton();
         Restar = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,13 +134,6 @@ public class Ventas extends javax.swing.JFrame {
             }
         ));
         jScrollPane2.setViewportView(jTable2);
-
-        jButton1.setText("Listar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,13 +175,6 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -200,16 +186,13 @@ public class Ventas extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
-                        .addComponent(jButton1))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(55, 55, 55)
-                                .addComponent(jButton2)
-                                .addGap(108, 108, 108)
+                                .addGap(238, 238, 238)
                                 .addComponent(ImprimirButon)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
@@ -237,7 +220,6 @@ public class Ventas extends javax.swing.JFrame {
                         .addComponent(BotonAtras))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(jButton1)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
@@ -250,9 +232,7 @@ public class Ventas extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(totalLabel)
                         .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ImprimirButon, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2)))
+                        .addComponent(ImprimirButon, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,13 +253,6 @@ public class Ventas extends javax.swing.JFrame {
         Mainn main=new Mainn();
         main.setVisible(true);
     }//GEN-LAST:event_BotonAtrasActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        Connection conexion = cn.establecerConexion("root", "ADMIN12341");
-        cn.listarProductos(jTable2, conexion);
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
@@ -363,12 +336,6 @@ if (filaSeleccionada != -1) {
 
     }//GEN-LAST:event_RestarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int recorridos;
-        recorridos=jTable3.getRowCount();
-        System.out.println(recorridos);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -411,8 +378,6 @@ if (filaSeleccionada != -1) {
     private javax.swing.JButton ImprimirButon;
     private javax.swing.JButton Restar;
     private javax.swing.JButton Sumar;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
