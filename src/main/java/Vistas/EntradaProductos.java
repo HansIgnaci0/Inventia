@@ -8,6 +8,7 @@ import com.mycompany.inventia.ConexionBD;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author wizfa
@@ -16,6 +17,7 @@ public class EntradaProductos extends javax.swing.JFrame {
     private ConexionBD conexion;
     private Connection conn;
             ConexionBD con = new ConexionBD();
+    DefaultTableModel modeloProductos = new DefaultTableModel();
 
 
     /**
@@ -25,6 +27,9 @@ public class EntradaProductos extends javax.swing.JFrame {
     public EntradaProductos() {
         initComponents();
         this.setLocationRelativeTo(null);
+        String[] titulo = new String[] {"Producto", "Precio","Stock"};
+    modeloProductos.setColumnIdentifiers(titulo);
+    jTable1.setModel(modeloProductos); 
     }
 
 
@@ -40,18 +45,9 @@ public class EntradaProductos extends javax.swing.JFrame {
         BotonListar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        TextfID = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        TextfNombre = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        TextfPrecio = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        TextfCantidad = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         BotonAgregar = new javax.swing.JButton();
-        BotonModificar = new javax.swing.JButton();
-        BotonEliminar = new javax.swing.JButton();
         BotonAtras = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,56 +71,10 @@ public class EntradaProductos extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        TextfID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextfIDActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("ID");
-
-        TextfNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextfNombreActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Nombre");
-
-        TextfPrecio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextfPrecioActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Precio");
-
-        TextfCantidad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextfCantidadActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Cantidad");
-
-        BotonAgregar.setText("Agregar");
+        BotonAgregar.setText("Actualizar Stock");
         BotonAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonAgregarActionPerformed(evt);
-            }
-        });
-
-        BotonModificar.setText("Modificar");
-        BotonModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonModificarActionPerformed(evt);
-            }
-        });
-
-        BotonEliminar.setText("Eliminar");
-        BotonEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonEliminarActionPerformed(evt);
             }
         });
 
@@ -135,65 +85,43 @@ public class EntradaProductos extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Agregar Producto");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(8, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BotonAtras)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(TextfID, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(TextfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(TextfPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(TextfCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(111, 111, 111)
                         .addComponent(BotonAgregar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BotonModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BotonEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(152, 152, 152)
                         .addComponent(BotonListar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1))
                 .addGap(14, 14, 14))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(BotonAtras))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TextfID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextfPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextfCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BotonAgregar)
-                    .addComponent(BotonModificar)
-                    .addComponent(BotonEliminar)
-                    .addComponent(BotonListar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(BotonAtras)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(BotonAgregar)
+                            .addComponent(BotonListar))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
 
         pack();
@@ -207,49 +135,37 @@ public class EntradaProductos extends javax.swing.JFrame {
         main.setVisible(true);
     }//GEN-LAST:event_BotonAtrasActionPerformed
 
-    private void TextfIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextfIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TextfIDActionPerformed
-
-    private void TextfPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextfPrecioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TextfPrecioActionPerformed
-
     private void BotonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonAgregarActionPerformed
         
-        int id = Integer.parseInt(TextfID.getText());
-        String nombre = TextfNombre.getText();
-        double precio = Double.parseDouble(TextfPrecio.getText());
-        int cantidad = Integer.parseInt(TextfCantidad.getText());
-        Connection conexion = con.establecerConexion("root", "ADMIN12341");
-        con.agregarProducto(nombre, precio, cantidad, id);
-        con.listarEntradaProducto(jTable1, conexion);
+        
+
+        
+        if (jTable1.getSelectedRow() != -1) {
+            int filaSeleccionada = jTable1.getSelectedRow(); 
+            String nombreProducto=(String) jTable1.getValueAt(filaSeleccionada, 0); 
+            String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad para " + nombreProducto);
+            if (cantidadStr != null){
+                try{
+                    int cantidadInt = Integer.parseInt(cantidadStr); 
+                    int cantidadInicial = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 2).toString());
+                    int cantidadFinal=cantidadInt+cantidadInicial;
+                    System.out.println(cantidadFinal);
+                    Connection conexion = con.establecerConexion("root", "ADMIN12341");
+                    
+                    con.modificarProducto(nombreProducto, cantidadFinal);
+                    con.listarEntradaProducto(jTable1, conexion);
+                    
+                }catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida");
+            }
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila para modificar.");
+            System.out.println("No, no hay ninguna fila seleccionada.");
+}
+        }
+
     }//GEN-LAST:event_BotonAgregarActionPerformed
-
-    private void TextfNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextfNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TextfNombreActionPerformed
-
-    private void TextfCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextfCantidadActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TextfCantidadActionPerformed
-
-    private void BotonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonModificarActionPerformed
-        int id = Integer.parseInt(TextfID.getText());
-        String nombre = TextfNombre.getText();
-        double precio = Double.parseDouble(TextfPrecio.getText());
-        int cantidad = Integer.parseInt(TextfCantidad.getText());
-        Connection conexion = con.establecerConexion("root", "ADMIN12341");
-        con.modificarProducto(id, nombre, precio, cantidad);
-        con.listarEntradaProducto(jTable1, conexion);
-    }//GEN-LAST:event_BotonModificarActionPerformed
-
-    private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
-        int id = Integer.parseInt(TextfID.getText());
-        Connection conexion = con.establecerConexion("root", "ADMIN12341");
-        con.eliminarProducto(id);
-        con.listarEntradaProducto(jTable1, conexion);
-    }//GEN-LAST:event_BotonEliminarActionPerformed
 
     private void BotonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonListarActionPerformed
         Connection conexion = con.establecerConexion("root", "ADMIN12341");
@@ -295,17 +211,8 @@ public class EntradaProductos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAgregar;
     private javax.swing.JButton BotonAtras;
-    private javax.swing.JButton BotonEliminar;
     private javax.swing.JButton BotonListar;
-    private javax.swing.JButton BotonModificar;
-    private javax.swing.JTextField TextfCantidad;
-    private javax.swing.JTextField TextfID;
-    private javax.swing.JTextField TextfNombre;
-    private javax.swing.JTextField TextfPrecio;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

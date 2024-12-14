@@ -335,9 +335,13 @@ public class Ventas extends javax.swing.JFrame {
             int cantidad = (Integer) jTable3.getValueAt(i, 1);
             double precio = (Double) jTable3.getValueAt(i, 2);
             double  total= cantidad * precio;
-
+            String nombre= (String) jTable3.getValueAt(i, 0);
+            int stockInicial=cn.obtenerStock(nombre);
+            int stockFinal=stockInicial-cantidad;
             System.out.println("Cantidad: " + cantidad + ", Precio: " + precio + ", Total: " + total);
             cn.agregarVenta(Idproducto,cantidad,idtrabajador,precio,total,fechaSQL);
+            cn.modificarProducto(nombre, stockFinal);
+            
         }
     } else if (opcion == JOptionPane.NO_OPTION) {
         System.out.println("No se realizó la venta.");

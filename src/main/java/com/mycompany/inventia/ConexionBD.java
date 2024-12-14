@@ -125,23 +125,21 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         if (modelo.getColumnCount() == 0) {
             modelo.addColumn("Producto");
             modelo.addColumn("Cantidad");
-            modelo.addColumn("Precio");
             modelo.addColumn("Total");
         }
 
         // Consulta SQL para obtener las ventas del día
-        String query = "SELECT id_producto,cantidad, precio_unitario, (cantidad * precio_unitario) AS total FROM detalle_venta";
+        String query = "SELECT idProducto,cantidadProductosVendidos,subTotal from detalleventa where fechaVenta=CURDATE()";
 
         try {
             Statement stmt = conexion.createStatement();
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                String[] fila = new String[4];
-                fila[0] = rs.getString("id_producto");
-                fila[1] = String.valueOf(rs.getInt("cantidad"));
-                fila[2] = String.valueOf(rs.getDouble("precio_unitario"));
-                fila[3] = String.valueOf(rs.getDouble("total"));
+                String[] fila = new String[3];
+                fila[0] = rs.getString("idProducto");
+                fila[1] = String.valueOf(rs.getInt("cantidadProductosVendidos"));
+                fila[2] = String.valueOf(rs.getDouble("subTotal"));
 
                 modelo.addRow(fila); // Añadir la fila a la tabla
             }
@@ -228,17 +226,15 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         }
     }
 
-    public void modificarProducto(int id_producto, String nombre, double precio, int cantidad) {
-        String query = "UPDATE producto SET NOMBRE = ?, PRECIO = ?, STOCK = ? WHERE ID_PRODUCTO = ?";
+    public void modificarProducto(String nombre,int cantidad) {
+        String query = "UPDATE producto SET stockProducto = ? WHERE nombreProducto = ?";
         try {
             PreparedStatement ps = conectar.prepareStatement(query);
-            ps.setString(1, nombre);
-            ps.setDouble(2, precio);
-            ps.setInt(3, cantidad);
-            ps.setInt(4, id_producto);
+            ps.setInt(1, cantidad); // Primer marcador: stockProducto
+            ps.setString(2, nombre);
+            
 
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Producto modificado exitosamente.");
             ps.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al modificar el producto: " + e.getMessage());
@@ -270,13 +266,12 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 
     // Definir las columnas de la tabla
     if (modelo.getColumnCount() == 0) {
-        modelo.addColumn("ID Producto");
-        modelo.addColumn("Nombre");
-        modelo.addColumn("Precio");
-        modelo.addColumn("Cantidad"); // Incluyendo cantidad si es necesario
+        modelo.addColumn("nombreProducto");
+        modelo.addColumn("precioUnitarioProducto");
+        modelo.addColumn("stockProducto"); // Incluyendo cantidad si es necesario
     }
 
-    String query = "SELECT ID_PRODUCTO, NOMBRE, PRECIO,STOCK  FROM producto";
+    String query = "SELECT nombreProducto, precioUnitarioProducto, stockProducto  FROM producto";
 
     try {
         Statement stmt = conexion.createStatement();
@@ -284,17 +279,42 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 
         // Llenar las filas de la tabla
         while (rs.next()) {
-            String[] fila = new String[4];
-            fila[0] = String.valueOf(rs.getInt("ID_PRODUCTO"));
-            fila[1] = rs.getString("NOMBRE");
-            fila[2] = String.valueOf(rs.getDouble("PRECIO"));
-            fila[3] = String.valueOf(rs.getInt("STOCK")); // Incluyendo cantidad si es necesario
+            String[] fila = new String[3];
+            fila[0] = String.valueOf(rs.getString("nombreProducto"));
+            fila[1] = String.valueOf(rs.getInt("precioUnitarioProducto"));
+            fila[2] = fila[2] = String.valueOf(rs.getInt("stockProducto"));
 
             modelo.addRow(fila);
         }
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
     }
+}
+    public int obtenerStock(String nombre) {
+    String query = "SELECT stockProducto FROM producto WHERE nombreProducto = ?";
+    int stock = -1; // Valor inicial para manejar posibles errores o resultados vacíos
+
+    try {
+        // Preparar la consulta
+        PreparedStatement ps = conectar.prepareStatement(query);
+        ps.setString(1, nombre);
+
+        // Ejecutar la consulta
+        ResultSet rs = ps.executeQuery();
+
+        // Leer el resultado
+        if (rs.next()) {
+            stock = rs.getInt("stockProducto");
+        }
+
+        // Cerrar recursos
+        rs.close();
+        ps.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al obtener el stock: " + e.getMessage());
+    }
+
+    return stock;
 }
 }
 

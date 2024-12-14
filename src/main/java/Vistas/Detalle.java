@@ -25,7 +25,7 @@ public class Detalle extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         
-        String[] titulo = new String[] {"Producto", "Cantidad", "Precio", "Total"};
+        String[] titulo = new String[] {"Producto", "Cantidad", "Total"};
         dtm.setColumnIdentifiers(titulo);
         jTableDetalle.setModel(dtm);
         
@@ -36,6 +36,25 @@ public class Detalle extends javax.swing.JFrame {
     private void listarDetalleDiario() {
         Connection conexion = cn.establecerConexion("root", "ADMIN12341");
         cn.listarDetalleDiario(jTableDetalle, conexion);
+        double suma = 0;
+
+// Recorre todas las filas del JTable
+    for (int i = 0; i < jTableDetalle.getRowCount(); i++) {
+    // Obtiene el valor de la celda en la columna especificada (por ejemplo, columna 2)
+    Object valor = jTableDetalle.getValueAt(i, 2); // Cambia '2' si es otra columna
+    
+    // Verifica que el valor no sea nulo y que sea de tipo numérico
+    if (valor != null) {
+        try {
+            // Convierte el valor a Double y lo suma a la variable suma
+            suma += Double.parseDouble(valor.toString());
+            totalLabel.setText("Total dia: "+suma);
+        } catch (NumberFormatException e) {
+            // Si no se puede convertir el valor, muestra un error
+            System.out.println("Error al convertir el valor de la fila " + i + ": " + valor);
+        }
+    }
+}
     }
     
     /**
@@ -53,6 +72,7 @@ public class Detalle extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableDetalle = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        totalLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,6 +109,8 @@ public class Detalle extends javax.swing.JFrame {
             }
         });
 
+        totalLabel.setText("Total dia:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,7 +131,10 @@ public class Detalle extends javax.swing.JFrame {
                         .addGap(97, 97, 97)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(225, 225, 225)
+                        .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -125,7 +150,9 @@ public class Detalle extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(totalLabel)
+                .addContainerGap(98, Short.MAX_VALUE))
         );
 
         pack();
@@ -185,5 +212,6 @@ public class Detalle extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableDetalle;
+    private javax.swing.JLabel totalLabel;
     // End of variables declaration//GEN-END:variables
 }
