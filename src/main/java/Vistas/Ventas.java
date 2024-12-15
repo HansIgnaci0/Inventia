@@ -269,6 +269,12 @@ public class Ventas extends javax.swing.JFrame {
         String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad para " + nombreProducto);
         if (cantidadStr != null && !cantidadStr.trim().isEmpty()) {
             try {
+                int stock=cn.obtenerStock(nombreProducto);
+                
+                if (stock >= Integer.parseInt(cantidadStr)){
+                    
+                    
+                
                 int cantidad = Integer.parseInt(cantidadStr);
                 double total = cantidad * precioProducto;
 
@@ -276,6 +282,9 @@ public class Ventas extends javax.swing.JFrame {
                 modeloBoleta.addRow(new Object[]{nombreProducto, cantidad, precioProducto, total});
 
                 sumatotal(); // Recalcula el total
+                }else {
+                    JOptionPane.showMessageDialog(null, "Stock insuficiente");
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida");
             }

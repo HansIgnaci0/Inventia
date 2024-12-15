@@ -316,5 +316,33 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
 
     return stock;
 }
+    public void listarPedidos(JTable tabla, Connection conexion) {
+    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+    modelo.setRowCount(0);
+
+    // Definir las columnas de la tabla
+    if (modelo.getColumnCount() == 0) {
+        modelo.addColumn("nombreProducto");
+        modelo.addColumn("stockProducto"); // Incluyendo cantidad si es necesario
+    }
+
+    String query = "SELECT nombreProducto, stockProducto  FROM producto";
+
+    try {
+        Statement stmt = conexion.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        // Llenar las filas de la tabla
+        while (rs.next()) {
+            String[] fila = new String[3];
+            fila[0] = String.valueOf(rs.getString("nombreProducto"));
+            fila[1] = String.valueOf(rs.getInt("stockProducto"));
+
+            modelo.addRow(fila);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+    }
+}
 }
 
