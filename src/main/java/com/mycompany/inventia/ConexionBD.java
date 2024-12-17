@@ -301,9 +301,9 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
     }
 
     String query = "SELECT p.nombreProducto, ped.cantidadSolicitada " +
-                   "FROM pedidos ped " +
-                   "INNER JOIN producto p ON ped.idProducto = p.idProducto " +
-                   "WHERE p.idProveedor=" + idproveedor;
+               "FROM pedidos ped " +
+               "INNER JOIN producto p ON ped.idProducto = p.idProducto " +
+               "WHERE p.idProveedor = "+idproveedor;
 
 
     try {
@@ -414,7 +414,7 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         modelo.addColumn("stockProducto"); // Incluyendo cantidad si es necesario
     }
 
-    String query = "SELECT nombreProducto, stockProducto  FROM producto";
+    String query = "SELECT nombreProducto, stockProducto  FROM producto ";
 
     try {
         Statement stmt = conexion.createStatement();

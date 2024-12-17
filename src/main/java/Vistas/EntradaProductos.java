@@ -50,7 +50,6 @@ public class EntradaProductos extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         BotonAgregar = new javax.swing.JButton();
         BotonAtras = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -81,8 +80,6 @@ public class EntradaProductos extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Agregar Producto");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -93,10 +90,8 @@ public class EntradaProductos extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BotonAgregar)
-                    .addComponent(jButton1))
-                .addGap(229, 229, 229))
+                .addComponent(BotonAgregar)
+                .addGap(238, 238, 238))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,9 +101,7 @@ public class EntradaProductos extends javax.swing.JFrame {
                         .addGap(5, 5, 5)
                         .addComponent(BotonAtras)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BotonAgregar)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(BotonAgregar))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -196,7 +189,6 @@ public class EntradaProductos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAgregar;
     private javax.swing.JButton BotonAtras;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
