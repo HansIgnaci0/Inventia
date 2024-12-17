@@ -6,6 +6,8 @@ package Vistas;
 
 import com.mycompany.inventia.ConexionBD;
 import java.sql.Connection;
+import java.sql.Date;
+import java.time.LocalDate;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -72,6 +74,7 @@ public class Detalle extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableDetalle = new javax.swing.JTable();
         totalLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,6 +106,13 @@ public class Detalle extends javax.swing.JFrame {
 
         totalLabel.setText("Total dia:");
 
+        jButton1.setText("Terminar Dia");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,7 +134,10 @@ public class Detalle extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(225, 225, 225)
-                        .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(249, 249, 249)
+                        .addComponent(jButton1)))
                 .addContainerGap(173, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -140,7 +153,9 @@ public class Detalle extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(totalLabel)
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pack();
@@ -153,6 +168,36 @@ public class Detalle extends javax.swing.JFrame {
         Mainn main=new Mainn();
         main.setVisible(true);
     }//GEN-LAST:event_BotonAtrasActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        double sumaTotal = 0; // Variable para acumular la suma
+
+    // Recorrer todas las filas de la tabla
+    for (int i = 0; i < jTableDetalle.getRowCount(); i++) {
+        // Obtener el valor de la celda en la columna 2
+        Object valor = jTableDetalle.getValueAt(i, 2);
+
+        // Validar que el valor no sea null y sea convertible a entero
+        if (valor != null) {
+            try {
+                // Convertir el valor a entero y sumarlo
+                double valorInt = Double.parseDouble(valor.toString());
+                sumaTotal += valorInt;
+            } catch (NumberFormatException e) {
+                // Si no se puede convertir a entero, mostrar un mensaje
+                System.out.println("Valor no válido en la fila " + i + ": " + valor);
+            }
+        }
+    }
+    LocalDate fechaActual = LocalDate.now();
+    Date fechaSQL = Date.valueOf(fechaActual);
+    // Imprimir el resultado total
+    int sumaTotalEntero = (int) sumaTotal;
+    cn.agregarTotalDia(sumaTotalEntero, fechaSQL);
+        
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -191,6 +236,7 @@ public class Detalle extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonAtras;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

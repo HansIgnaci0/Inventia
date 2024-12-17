@@ -290,6 +290,92 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
     }
 }
+    public void listarpedidos(JTable tabla, Connection conexion,int idproveedor) {
+    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+    modelo.setRowCount(0);
+
+    // Definir las columnas de la tabla
+    if (modelo.getColumnCount() == 0) {
+        modelo.addColumn("Producto");
+        modelo.addColumn("Cantidad Solicitada"); // Incluyendo cantidad si es necesario
+    }
+
+    String query = "SELECT p.nombreProducto, ped.cantidadSolicitada " +
+                   "FROM pedidos ped " +
+                   "INNER JOIN producto p ON ped.idProducto = p.idProducto " +
+                   "WHERE p.idProveedor=" + idproveedor;
+
+
+    try {
+        Statement stmt = conexion.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        // Llenar las filas de la tabla
+        while (rs.next()) {
+            String[] fila = new String[2];
+            fila[0] = String.valueOf(rs.getString("nombreProducto"));
+            fila[1] = String.valueOf(rs.getInt("cantidadSolicitada"));
+
+            modelo.addRow(fila);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+    }
+}
+    public int obtenerProveedor(String nombre) {
+    String query = "SELECT idProveedor FROM producto WHERE nombreProducto = ?";
+    int proveedor = -1; // Valor inicial para manejar posibles errores o resultados vacíos
+
+    try {
+        // Preparar la consulta
+        PreparedStatement ps = conectar.prepareStatement(query);
+        ps.setString(1, nombre);
+
+        // Ejecutar la consulta
+        ResultSet rs = ps.executeQuery();
+
+        // Leer el resultado
+        if (rs.next()) {
+            proveedor = rs.getInt("idProveedor");
+        }
+
+        // Cerrar recursos
+        rs.close();
+        ps.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al obtener el stock: " + e.getMessage());
+    }
+
+    
+    return proveedor;
+}
+    public int obtenerID(String nombre) {
+    String query = "SELECT idProducto FROM producto WHERE nombreProducto = ?";
+    int ID = -1; // Valor inicial para manejar posibles errores o resultados vacíos
+
+    try {
+        // Preparar la consulta
+        PreparedStatement ps = conectar.prepareStatement(query);
+        ps.setString(1, nombre);
+
+        // Ejecutar la consulta
+        ResultSet rs = ps.executeQuery();
+
+        // Leer el resultado
+        if (rs.next()) {
+            ID = rs.getInt("idProducto");
+        }
+
+        // Cerrar recursos
+        rs.close();
+        ps.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al obtener el stock: " + e.getMessage());
+    }
+
+    
+    return ID;
+}
     public int obtenerStock(String nombre) {
     String query = "SELECT stockProducto FROM producto WHERE nombreProducto = ?";
     int stock = -1; // Valor inicial para manejar posibles errores o resultados vacíos
@@ -314,8 +400,10 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
         JOptionPane.showMessageDialog(null, "Error al obtener el stock: " + e.getMessage());
     }
 
+    
     return stock;
 }
+    
     public void listarPedidos(JTable tabla, Connection conexion) {
     DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
     modelo.setRowCount(0);
@@ -343,6 +431,64 @@ public void listarDetalleDiario(JTable tabla, Connection conexion) {
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
     }
+}
+    public void agregarPedido(int id_producto, int idtrabajor, int cantidad, java.sql.Date fecha) {
+    // La secuencia idDetalleVenta_SEQ.NEXTVAL se maneja directamente en la consulta
+        
+    String query = "INSERT INTO pedidos(idProducto, idTrabajador, cantidadSolicitada, fechaSolicitud) "
+        + "VALUES (?, ?, ?, ?)";
+        
+    try {
+        // Preparar la consulta con los parámetros
+        PreparedStatement ps = conectar.prepareStatement(query);
+        
+        // Asignación de parámetros
+        ps.setInt(1, id_producto);   // Establece el id_producto
+        ps.setInt(2, idtrabajor);   // Establece el id del trabajador
+        ps.setInt(3, cantidad);     // Establece la cantidad solicitada
+        ps.setDate(4, fecha);       // Establece la fecha de solicitud
+
+        // Ejecutar la consulta
+        int filasAfectadas = ps.executeUpdate();
+
+        // Verificar si se insertó correctamente
+        
+
+        // Cerrar el PreparedStatement
+        ps.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al imprimir los datos: " + e.getMessage());
+    }
+}
+    public void agregarTotalDia(int total,java.sql.Date fecha) {
+    
+        String query = "INSERT INTO ingresosdia(fechaVenta, ingresosTotal) VALUES (?, ?)";
+
+    try {
+        // Preparar la consulta con los parámetros
+        PreparedStatement ps = conectar.prepareStatement(query);
+
+        // Asignación de parámetros
+        ps.setDate(1, fecha);   // Primer parámetro: fechaVenta
+        ps.setInt(2, total);    // Segundo parámetro: ingresosTotal
+
+        // Ejecutar la consulta
+        int filasAfectadas = ps.executeUpdate();
+
+        // Verificar si se insertó correctamente
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(null, "Datos insertados correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(null, "No se pudo insertar los datos.");
+        }
+
+        // Cerrar el PreparedStatement
+        ps.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al insertar los datos: " + e.getMessage());
+    }
+        
+    
 }
 }
 

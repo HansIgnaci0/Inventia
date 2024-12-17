@@ -8,6 +8,8 @@ import com.mycompany.inventia.ConexionBD;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.sql.Date;
+import java.time.LocalDate;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -58,6 +60,8 @@ public class Pedidos extends javax.swing.JFrame {
     private void initComponents() {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
+        jPopupMenu3 = new javax.swing.JPopupMenu();
         jLabel1 = new javax.swing.JLabel();
         BotonAtras = new javax.swing.JButton();
         txtBuscar = new javax.swing.JTextField();
@@ -196,10 +200,41 @@ public class Pedidos extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        PedidoImpreso PedidoImpreso = new PedidoImpreso();
-        PedidoImpreso.setVisible(true);
+        LocalDate fechaActual = LocalDate.now();
+        Date fechaSQL = Date.valueOf(fechaActual);
+        for (int i = 0; i < jTable2.getRowCount(); i++) {
+            
+            String nombre= (String) jTable2.getValueAt(i, 0);
+            int cantidadPedido = (Integer) jTable2.getValueAt(i, 1);
+            int proveedor=con.obtenerProveedor(nombre);
+            int IdProducto=con.obtenerID(nombre);
+            
+            con.agregarPedido(IdProducto, 2, cantidadPedido, fechaSQL);
+        }
         
-        this.dispose();
+        
+        
+        
+        
+        
+        
+        Proveedor1 proveedor1=new Proveedor1();
+        proveedor1.setLocation(100, 100);
+        proveedor1.setVisible(true);
+        
+        Proveedor2 proveedor2=new Proveedor2();
+        proveedor2.setLocation(600, 100);
+        proveedor2.setVisible(true);
+        
+        Proveedor3 proveedor3=new Proveedor3();
+        proveedor3.setLocation(1100, 100);
+        proveedor3.setVisible(true);
+        
+        
+        
+        
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -265,6 +300,8 @@ public class Pedidos extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
+    private javax.swing.JPopupMenu jPopupMenu3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;

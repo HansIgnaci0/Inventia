@@ -3,6 +3,7 @@ Vistas\Ventas$5.class
 Vistas\Login$3.class
 Vistas\Mainn$4.class
 Vistas\Pedidos$5.class
+Vistas\Proveedor1.class
 Vistas\Login$1.class
 Vistas\EntradaProductos.class
 Vistas\PedidoImpreso.class
@@ -10,6 +11,7 @@ Vistas\Login.class
 Vistas\Ventas$1.class
 Vistas\PedidoImpreso$1.class
 Vistas\Pedidos$3.class
+Vistas\Detalle$3.class
 Vistas\Detalle.class
 Vistas\Detalle$1.class
 Vistas\Mainn$2.class
@@ -24,10 +26,15 @@ Vistas\EntradaProductos$2.class
 Vistas\Ventas$4.class
 Vistas\Mainn.class
 Vistas\Mainn$3.class
+Vistas\Proveedor1$1.class
+Vistas\Proveedor2.class
+Vistas\Proveedor2$1.class
 Vistas\Pedidos$2.class
 Vistas\Ventas$2.class
 Vistas\Pedidos$1.class
+Vistas\Proveedor3.class
 Vistas\Ventas.class
+Vistas\Proveedor3$1.class
 Vistas\Pedidos.class
 Vistas\Ventas$7.class
 Vistas\Mainn$1.class
