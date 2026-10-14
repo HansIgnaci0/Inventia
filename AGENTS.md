@@ -82,6 +82,9 @@ El trabajo actual es corregir errores y mejorar la interfaz. No se rediseña el 
 - `ejecutar.ps1 -Avisos` muestra cada tipo de aviso en pantalla real y guarda un PNG de cada uno
   en `capturas/` (se verán ventanas moverse unos segundos). También imprime la trayectoria de la
   animación de subida.
+- `empaquetar.ps1` compila y genera `dist/Inventia_1.2.0.jar`, un único `.jar` ejecutable con MySQL, FlatLaf
+  y jcalendar dentro (clase principal `Vistas.Mainn`). No incluye las herramientas de `dev/`.
+  Se ejecuta con `java -jar dist\Inventia.jar` y requiere Java 21 o superior.
 - No se agregan datos falsos, bases de datos locales ni imitaciones de la BD al código de producción.
 
 ## Seguridad

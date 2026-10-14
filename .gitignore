@@ -6,3 +6,5 @@ dependency-reduced-pom.xml
 .dev-libs/
 .dev-out/
 capturas/
+.dev-build/
+dist/
