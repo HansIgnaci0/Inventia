@@ -20,6 +20,7 @@ public class Proveedor3 extends javax.swing.JFrame {
      * Creates new form Proveedor3
      */
     public Proveedor3() {
+        Tema.instalar();
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         model = new DefaultTableModel();
@@ -30,6 +31,7 @@ public class Proveedor3 extends javax.swing.JFrame {
         
         Connection conexion = con.establecerConexion("root", "ADMIN12341");
         con.listarpedidos(jTable1, conexion, 3);
+        Estilo.vistaProveedor(this, jLabel1, jTable1, jScrollPane1);
     }
 
     /**

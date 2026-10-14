@@ -17,8 +17,99 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
+        Tema.instalar();
         initComponents();
+        disenarLogin();
+        Tema.aplicar(this);
         this.setLocationRelativeTo(null);
+    }
+
+    /**
+     * Reordena los mismos componentes de initComponents() en un diseño centrado.
+     * Vive fuera del bloque generado para que NetBeans no lo pise.
+     */
+    private void disenarLogin() {
+        getRootPane().putClientProperty(Tema.SIN_CABECERA, Boolean.TRUE);
+        java.awt.Container panel = getContentPane();
+        panel.removeAll();
+        panel.setLayout(new java.awt.GridLayout(1, 2));
+
+        // Panel izquierdo: marca
+        javax.swing.JPanel marca = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        marca.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        marca.setBackground(Tema.TINTA);
+        marca.setPreferredSize(new java.awt.Dimension(320, 400));
+
+        jLabel1.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        jLabel1.setText("Inventia");
+        jLabel1.setPreferredSize(null);
+        jLabel1.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 40));
+        jLabel1.setForeground(java.awt.Color.WHITE);
+
+        javax.swing.JLabel lema = new javax.swing.JLabel("Inventario, ventas y pedidos");
+        lema.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        lema.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 15));
+        lema.setForeground(Tema.TINTA_SUAVE);
+
+        java.awt.GridBagConstraints m = new java.awt.GridBagConstraints();
+        m.gridx = 0;
+        m.gridy = 0;
+        m.anchor = java.awt.GridBagConstraints.WEST;
+        m.insets = new java.awt.Insets(0, 40, 6, 24);
+        marca.add(jLabel1, m);
+        m.gridy = 1;
+        m.insets = new java.awt.Insets(0, 40, 0, 24);
+        marca.add(lema, m);
+
+        // Panel derecho: formulario
+        javax.swing.JPanel formulario = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        formulario.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        formulario.setBackground(Tema.SUPERFICIE);
+        formulario.setPreferredSize(new java.awt.Dimension(380, 400));
+
+        javax.swing.JLabel encabezado = new javax.swing.JLabel("Iniciar sesión");
+        encabezado.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        encabezado.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 22));
+        encabezado.setForeground(Tema.TINTA);
+
+        jTextField1.setColumns(16);
+        jPasswordField1.setColumns(16);
+
+        java.awt.GridBagConstraints f = new java.awt.GridBagConstraints();
+        f.gridx = 0;
+        f.weightx = 1;
+        f.anchor = java.awt.GridBagConstraints.WEST;
+        f.fill = java.awt.GridBagConstraints.HORIZONTAL;
+
+        f.gridy = 0;
+        f.insets = new java.awt.Insets(0, 44, 24, 44);
+        formulario.add(encabezado, f);
+        f.gridy = 1;
+        f.insets = new java.awt.Insets(0, 44, 4, 44);
+        formulario.add(jLabel2, f);
+        f.gridy = 2;
+        f.ipady = 8;
+        f.insets = new java.awt.Insets(0, 44, 14, 44);
+        formulario.add(jTextField1, f);
+        f.gridy = 3;
+        f.ipady = 0;
+        f.insets = new java.awt.Insets(0, 44, 4, 44);
+        formulario.add(jLabel3, f);
+        f.gridy = 4;
+        f.ipady = 8;
+        f.insets = new java.awt.Insets(0, 44, 24, 44);
+        formulario.add(jPasswordField1, f);
+        f.gridy = 5;
+        f.ipady = 10;
+        f.insets = new java.awt.Insets(0, 44, 0, 44);
+        formulario.add(jButton1, f);
+
+        panel.add(marca);
+        panel.add(formulario);
+
+        setResizable(false);
+        getRootPane().setDefaultButton(jButton1);
+        pack();
     }
 
     /**
@@ -122,7 +213,9 @@ if (connectbolean) {
     Mainn mainredirect = new Mainn();
     mainredirect.setVisible(true);
 } else {
-
+    Aviso.mostrar(this, "Usuario o contraseña incorrectos. Revisa los datos e inténtalo de nuevo.");
+    jPasswordField1.setText("");
+    jPasswordField1.requestFocusInWindow();
 }
 
     }//GEN-LAST:event_jButton1ActionPerformed

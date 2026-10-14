@@ -26,15 +26,18 @@ public class Detalle extends javax.swing.JFrame {
      * Creates new form Detalle
      */
     public Detalle() {
+        Tema.instalar();
         initComponents();
         this.setLocationRelativeTo(null);
-        totalLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 24));
         
         
         String[] titulo = new String[] {"Hora", "Total"};
         dtm.setColumnIdentifiers(titulo);
         jTableDetalle.setModel(dtm);
         listarDetalleDiario(new java.sql.Date(System.currentTimeMillis()));
+
+    // Muestra la fecha de hoy en el selector (antes del listener, para no repetir la consulta)
+    DateChooser.setDate(new java.util.Date());
 
     // ---------- AÑADIMOS EL LISTENER ----------
     DateChooser.getDateEditor().addPropertyChangeListener(evt -> {
@@ -47,6 +50,71 @@ public class Detalle extends javax.swing.JFrame {
             }
         }
     }); 
+        disenarDetalle();
+    }
+
+    // ------------------------------------------------------------------
+    // Diseño visual. Reordena los mismos componentes de initComponents()
+    // en una tarjeta con el detalle del día. No toca la lógica.
+    // ------------------------------------------------------------------
+
+    private void disenarDetalle() {
+        setTitle("Inventia");
+        javax.swing.JPanel cabecera = Estilo.cabecera(BotonAtras, jLabel1, "Detalle de ventas");
+
+        Estilo.Pastilla contador = new Estilo.Pastilla();
+        DateChooser.setPreferredSize(new java.awt.Dimension(190, 38));
+        DateChooser.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 15));
+
+        javax.swing.JPanel encabezado = new javax.swing.JPanel(new java.awt.BorderLayout(12, 0));
+        encabezado.setOpaque(false);
+        encabezado.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 14, 16, 14));
+        encabezado.add(Estilo.tituloConPastilla("Ventas del día", contador), java.awt.BorderLayout.WEST);
+        encabezado.add(DateChooser, java.awt.BorderLayout.EAST);
+
+        Estilo.tabla(jTableDetalle, jScrollPane1);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(620, 340));
+        Estilo.columnas(jTableDetalle, new String[]{"Hora", "Total"}, new int[]{300, 300});
+        jTableDetalle.getColumnModel().getColumn(0).setCellRenderer(new Estilo.Celda(Estilo.Celda.TEXTO, javax.swing.SwingConstants.LEFT, false, Tema.TEXTO));
+        jTableDetalle.getColumnModel().getColumn(1).setCellRenderer(new Estilo.Celda(Estilo.Celda.PESOS, javax.swing.SwingConstants.RIGHT, true, Tema.TEXTO));
+
+        javax.swing.JLabel etiquetaTotal = new javax.swing.JLabel("Total del día");
+        etiquetaTotal.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        etiquetaTotal.setForeground(Tema.TEXTO_SUAVE);
+        totalLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 40));
+        totalLabel.setForeground(Tema.TEXTO);
+        javax.swing.JPanel pie = new javax.swing.JPanel(new java.awt.BorderLayout());
+        pie.setOpaque(false);
+        pie.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 14, 16, 14));
+        pie.add(etiquetaTotal, java.awt.BorderLayout.NORTH);
+        pie.add(totalLabel, java.awt.BorderLayout.CENTER);
+
+        Superficie tarjeta = new Superficie(new java.awt.BorderLayout());
+        tarjeta.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tarjeta.add(encabezado, java.awt.BorderLayout.NORTH);
+        tarjeta.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        tarjeta.add(pie, java.awt.BorderLayout.SOUTH);
+
+        javax.swing.JPanel cuerpo = new javax.swing.JPanel(new java.awt.BorderLayout());
+        cuerpo.setBackground(Tema.FONDO);
+        cuerpo.setBorder(javax.swing.BorderFactory.createEmptyBorder(22, 22, 22, 22));
+        cuerpo.add(tarjeta, java.awt.BorderLayout.CENTER);
+
+        javax.swing.JPanel raiz = new javax.swing.JPanel(new java.awt.BorderLayout());
+        raiz.add(cabecera, java.awt.BorderLayout.NORTH);
+        raiz.add(cuerpo, java.awt.BorderLayout.CENTER);
+        setContentPane(raiz);
+
+        Runnable actualizar = () -> {
+            int n = dtm.getRowCount();
+            contador.setText(n == 1 ? "1 venta" : n + " ventas");
+        };
+        dtm.addTableModelListener(e -> javax.swing.SwingUtilities.invokeLater(actualizar));
+        actualizar.run();
+
+        pack();
+        setMinimumSize(getPreferredSize());
+        setLocationRelativeTo(null);
     }
     
        private void listarDetalleDiario(java.sql.Date fechaSQL) {
@@ -79,7 +147,7 @@ public class Detalle extends javax.swing.JFrame {
         e.printStackTrace();
     }
 
-    totalLabel.setText("Total día: $" + totalDia);
+    totalLabel.setText(Estilo.pesos(totalDia));
 }
 
 

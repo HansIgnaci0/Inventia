@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
 import javax.swing.JOptionPane;
+import Vistas.Aviso;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -60,9 +61,9 @@ public class ConexionBD {
             conectar = DriverManager.getConnection(cadena, usuario, contrasenia);
             
         } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "No se encontró el Driver: " + e.getMessage());
+            Aviso.mostrar(null, "No se encontró el Driver: " + e.getMessage());
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al conectar a la base de datos: " + e.getMessage());
+            Aviso.mostrar(null, "Error al conectar a la base de datos: " + e.getMessage());
             e.printStackTrace(); // Esto imprime el detalle del error en la consola
         }
         return conectar;
@@ -105,7 +106,7 @@ public void listarProductos(JTable tabla, Connection conexion) {
 }
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+        Aviso.mostrar(null, "Error al listar los productos: " + e.getMessage());
     }
 }
 
@@ -140,7 +141,7 @@ public void listarVentasDelDia(JTable tabla, Connection conexion) {
         }
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al listar caja del día: " + e.getMessage());
+        Aviso.mostrar(null, "Error al listar caja del día: " + e.getMessage());
     }
 }
 
@@ -156,7 +157,7 @@ public int obtenerTotalDelDia() {
         }
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error total del día: " + e.getMessage());
+        Aviso.mostrar(null, "Error total del día: " + e.getMessage());
     }
 
     return 0;
@@ -183,7 +184,7 @@ public int obtenerTotalDelDia() {
         }
 
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al guardar venta: " + e.getMessage());
+        Aviso.mostrar(null, "Error al guardar venta: " + e.getMessage());
     }
 
     return -1; // error
@@ -221,7 +222,7 @@ public int obtenerTotalDelDia() {
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al modificar el producto: " + e.getMessage());
+            Aviso.mostrar(null, "Error al modificar el producto: " + e.getMessage());
         }
     }
 
@@ -234,10 +235,10 @@ public void eliminarProducto(String nombreProducto) {
         ps.executeUpdate();
         ps.close();
 
-        JOptionPane.showMessageDialog(null, "Producto eliminado correctamente");
+        Aviso.mostrar(null, "Producto eliminado correctamente");
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al eliminar: " + e.getMessage());
+        Aviso.mostrar(null, "Error al eliminar: " + e.getMessage());
     }
 }
 
@@ -254,7 +255,7 @@ public void insertarProductoGranel(String codigo, String nombre, double precio) 
         ps.executeUpdate();
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al crear granel: " + e.getMessage());
+        Aviso.mostrar(null, "Error al crear granel: " + e.getMessage());
     }
 }
 public String generarCodigoGranel() {
@@ -306,7 +307,7 @@ public String generarCodigoGranel() {
             modelo.addRow(fila);
         }
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+        Aviso.mostrar(null, "Error al listar los productos: " + e.getMessage());
     }
 }
     public void listarpedidos(JTable tabla, Connection conexion,int idproveedor) {
@@ -338,7 +339,7 @@ public String generarCodigoGranel() {
             modelo.addRow(fila);
         }
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+        Aviso.mostrar(null, "Error al listar los productos: " + e.getMessage());
     }
 }
     public int obtenerProveedor(String nombre) {
@@ -362,7 +363,7 @@ public String generarCodigoGranel() {
         rs.close();
         ps.close();
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al obtener el stock: " + e.getMessage());
+        Aviso.mostrar(null, "Error al obtener el stock: " + e.getMessage());
     }
 
     
@@ -389,7 +390,7 @@ public String generarCodigoGranel() {
         rs.close();
         ps.close();
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al obtener el stock: " + e.getMessage());
+        Aviso.mostrar(null, "Error al obtener el stock: " + e.getMessage());
     }
 
     
@@ -416,7 +417,7 @@ public Integer obtenerStock(String nombre) {
         }
 
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al obtener stock: " + e.getMessage());
+        Aviso.mostrar(null, "Error al obtener stock: " + e.getMessage());
     }
 
     return null;
@@ -447,7 +448,7 @@ public Integer obtenerStock(String nombre) {
             modelo.addRow(fila);
         }
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al listar los productos: " + e.getMessage());
+        Aviso.mostrar(null, "Error al listar los productos: " + e.getMessage());
     }
 }
     public void agregarPedido(int id_producto, int idtrabajor, int cantidad, java.sql.Date fecha) {
@@ -475,7 +476,7 @@ public Integer obtenerStock(String nombre) {
         // Cerrar el PreparedStatement
         ps.close();
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al imprimir los datos: " + e.getMessage());
+        Aviso.mostrar(null, "Error al imprimir los datos: " + e.getMessage());
     }
 }
     public void agregarTotalDia(int total,java.sql.Date fecha) {
@@ -495,15 +496,15 @@ public Integer obtenerStock(String nombre) {
 
         // Verificar si se insertó correctamente
         if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(null, "Datos insertados correctamente.");
+            Aviso.mostrar(null, "Datos insertados correctamente.");
         } else {
-            JOptionPane.showMessageDialog(null, "No se pudo insertar los datos.");
+            Aviso.mostrar(null, "No se pudo insertar los datos.");
         }
 
         // Cerrar el PreparedStatement
         ps.close();
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al insertar los datos: " + e.getMessage());
+        Aviso.mostrar(null, "Error al insertar los datos: " + e.getMessage());
     }
         
     
@@ -520,7 +521,7 @@ public Integer obtenerStock(String nombre) {
         ps.setString(1, codigo);
         return ps.executeQuery();
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error buscar producto: " + e.getMessage());
+        Aviso.mostrar(null, "Error buscar producto: " + e.getMessage());
     }
     return null;
 }
@@ -539,7 +540,7 @@ public Integer obtenerStock(String nombre) {
         ps.setString(3, codigo);
         ps.executeUpdate();
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al actualizar producto: " + e.getMessage());
+        Aviso.mostrar(null, "Error al actualizar producto: " + e.getMessage());
     }
 }
 
@@ -561,7 +562,7 @@ public Integer obtenerStock(String nombre) {
         ps.executeUpdate();
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al crear producto: " + e.getMessage());
+        Aviso.mostrar(null, "Error al crear producto: " + e.getMessage());
     }
 }
 
@@ -579,7 +580,7 @@ public Integer obtenerStock(String nombre) {
         }
 
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al obtener tipo: " + e.getMessage());
+        Aviso.mostrar(null, "Error al obtener tipo: " + e.getMessage());
     }
 
     return "NORMAL"; // por defecto (por seguridad)

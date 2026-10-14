@@ -14,7 +14,9 @@ public class PedidoImpreso extends javax.swing.JFrame {
      * Creates new form PedidoImpreso
      */
     public PedidoImpreso() {
+        Tema.instalar();
         initComponents();
+        Tema.aplicar(this);
         this.setLocationRelativeTo(null);
     }
 

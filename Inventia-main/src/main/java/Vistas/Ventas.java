@@ -61,22 +61,16 @@ DefaultTableModel modeloBoleta = new DefaultTableModel() {
      * Creates new form NewJFrame
      */
     public Ventas() {
+        Tema.instalar();
         initComponents();
-        
-        mantenerFocoScanner();
-        
-        totalLabel1.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD,32));
 
-    
+        mantenerFocoScanner();
 
         this.setLocationRelativeTo(null);
-        
+
         String[] titulo = {"Codigo", "Producto", "Precio"};
     modeloProductos.setColumnIdentifiers(titulo);
-    jTable2.setModel(modeloProductos); 
-    jTable2.getColumnModel().getColumn(0).setMinWidth(0);
-jTable2.getColumnModel().getColumn(0).setMaxWidth(0);
-jTable2.getColumnModel().getColumn(0).setWidth(0);
+    jTable2.setModel(modeloProductos);
 
     
    String[] titulo2 = {"Codigo", "Producto", "Cantidad", "Precio Unitario", "Total"};
@@ -105,6 +99,7 @@ jTable3.getColumnModel().getColumn(0).setWidth(0);
     txtBuscar.requestFocusInWindow();
 });
 
+        disenarVenta();
     }
     private void agregarProductoDesdeScanner(int filaModelo) {
 
@@ -119,7 +114,7 @@ jTable3.getColumnModel().getColumn(0).setWidth(0);
     // ------------------ PRODUCTO GRANEL --------------------
     if (tipo.equals("GRANEL")) {
 
-        String kilosStr = JOptionPane.showInputDialog(
+        String kilosStr = Aviso.pedirTexto(
                 this,
                 "¿Cuántos kilos de " + nombre + "?"
         );
@@ -143,7 +138,7 @@ jTable3.getColumnModel().getColumn(0).setWidth(0);
             return;
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ingrese un número válido (ej: 1.3)");
+            Aviso.mostrar(this, "Ingrese un número válido (ej: 1.3)");
             return;
         }
     }
@@ -161,7 +156,7 @@ jTable3.getColumnModel().getColumn(0).setWidth(0);
             Integer stock = cn.obtenerStock(nombre);
 
 if (stock != null && nuevaCantidad > stock) {
-    JOptionPane.showMessageDialog(this, "Stock insuficiente");
+    Aviso.mostrar(this, "Stock insuficiente");
     return;
 }
 
@@ -177,7 +172,7 @@ if (stock != null && nuevaCantidad > stock) {
     // No estaba en la boleta
         Integer stock = cn.obtenerStock(nombre);
 if (stock != null && stock < 1) {
-    JOptionPane.showMessageDialog(this, "Sin stock");
+    Aviso.mostrar(this, "Sin stock");
     return;
 }
 
@@ -211,7 +206,7 @@ if (stock != null && stock < 1) {
         }
     }
 
-    JOptionPane.showMessageDialog(this, "Producto no encontrado");
+    Aviso.mostrar(this, "Producto no encontrado");
 }
 
     private void filtrar(String texto) {
@@ -233,7 +228,7 @@ totalVenta += ((Number) valor).intValue();
 
 }
 
-    totalLabel1.setText("Total: $" + totalVenta);
+    totalLabel1.setText(pesos(totalVenta));
     }
     
     private void restarTotal() {
@@ -251,9 +246,188 @@ totalVenta += ((Number) valor).intValue();
     }
 
     // Actualizamos el label con el nuevo total
-    totalLabel1.setText("Total: $" + total);
+    totalLabel1.setText(pesos(total));
 }
 
+
+    // ------------------------------------------------------------------
+    // Diseño visual. Reordena los mismos componentes de initComponents()
+    // en dos tarjetas (productos / detalle de la venta). No toca la lógica:
+    // cada botón conserva su ActionListener original.
+    // ------------------------------------------------------------------
+
+    private static String pesos(int valor) {
+        return Estilo.pesos(valor);
+    }
+
+    private Estilo.Pastilla contadorProductos;
+    private Estilo.Pastilla contadorBoleta;
+    private javax.swing.JLabel lblMostrando;
+
+    private void disenarVenta() {
+        setTitle("Inventia");
+        javax.swing.JPanel cabecera = Estilo.cabecera(BotonAtras, jLabel2, "Venta");
+
+        // ---- Tarjeta de productos
+        contadorProductos = new Estilo.Pastilla();
+        txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar por código o nombre");
+        txtBuscar.putClientProperty("JTextField.leadingIcon", Iconos.lupa(Tema.TEXTO_SUAVE, 16));
+        txtBuscar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 15));
+        txtBuscar.setPreferredSize(new java.awt.Dimension(280, 38));
+
+        javax.swing.JPanel encabezadoProductos = new javax.swing.JPanel(new java.awt.BorderLayout(12, 0));
+        encabezadoProductos.setOpaque(false);
+        encabezadoProductos.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 14, 16, 14));
+        encabezadoProductos.add(Estilo.tituloConPastilla("Productos", contadorProductos), java.awt.BorderLayout.WEST);
+        encabezadoProductos.add(txtBuscar, java.awt.BorderLayout.EAST);
+
+        Estilo.tabla(jTable2, jScrollPane2);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(470, 380));
+        Estilo.columnas(jTable2, new String[]{"Código", "Producto", "Precio"}, new int[]{110, 250, 110});
+        jTable2.getColumnModel().getColumn(0).setCellRenderer(new Estilo.Celda(Estilo.Celda.TEXTO, javax.swing.SwingConstants.LEFT, false, Tema.TEXTO_SUAVE));
+        jTable2.getColumnModel().getColumn(1).setCellRenderer(new Estilo.Celda(Estilo.Celda.TEXTO, javax.swing.SwingConstants.LEFT, false, Tema.TEXTO));
+        jTable2.getColumnModel().getColumn(2).setCellRenderer(new Estilo.Celda(Estilo.Celda.PESOS, javax.swing.SwingConstants.RIGHT, true, Tema.TEXTO));
+
+        lblMostrando = Estilo.textoPie("");
+        javax.swing.JPanel pieProductos = new javax.swing.JPanel(new java.awt.BorderLayout());
+        pieProductos.setOpaque(false);
+        pieProductos.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 14, 12, 14));
+        pieProductos.add(lblMostrando, java.awt.BorderLayout.WEST);
+        pieProductos.add(Estilo.textoPie("Selecciona un producto y pulsa  →"), java.awt.BorderLayout.EAST);
+
+        Superficie tarjetaProductos = new Superficie(new java.awt.BorderLayout());
+        tarjetaProductos.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tarjetaProductos.add(encabezadoProductos, java.awt.BorderLayout.NORTH);
+        tarjetaProductos.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        tarjetaProductos.add(pieProductos, java.awt.BorderLayout.SOUTH);
+
+        // ---- Botones del centro: agregar (->) y quitar (<-)
+        Sumar.setText("");
+        Sumar.setIcon(Iconos.flechaDerecha(java.awt.Color.WHITE, 22));
+        Sumar.setToolTipText("Agregar a la venta");
+        Sumar.setBackground(Estilo.AZUL);
+        Sumar.setBorderPainted(false);
+        Sumar.setFocusPainted(false);
+        Sumar.setPreferredSize(new java.awt.Dimension(58, 58));
+        Sumar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+
+        Restar.setText("");
+        Restar.setIcon(Iconos.flechaIzquierda(Tema.TEXTO, 22));
+        Restar.setToolTipText("Quitar de la venta");
+        Restar.setBackground(java.awt.Color.WHITE);
+        Restar.setBorder(new javax.swing.border.LineBorder(Estilo.LINEA, 1, true));
+        Restar.setFocusPainted(false);
+        Restar.setPreferredSize(new java.awt.Dimension(58, 58));
+        Restar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.JPanel centro = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        centro.setOpaque(false);
+        java.awt.GridBagConstraints c = new java.awt.GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new java.awt.Insets(0, 0, 14, 0);
+        centro.add(Sumar, c);
+        c.gridy = 1;
+        c.insets = new java.awt.Insets(0, 0, 0, 0);
+        centro.add(Restar, c);
+
+        // ---- Tarjeta del detalle de la venta
+        contadorBoleta = new Estilo.Pastilla();
+        javax.swing.JPanel encabezadoBoleta = new javax.swing.JPanel(new java.awt.BorderLayout());
+        encabezadoBoleta.setOpaque(false);
+        encabezadoBoleta.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 14, 16, 14));
+        encabezadoBoleta.add(Estilo.tituloConPastilla("Detalle de la venta", contadorBoleta), java.awt.BorderLayout.WEST);
+        // misma altura que el encabezado de la izquierda, para alinear las tablas
+        encabezadoBoleta.setPreferredSize(new java.awt.Dimension(10, encabezadoProductos.getPreferredSize().height));
+
+        Estilo.tabla(jTable3, jScrollPane1);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(640, 380));
+        Estilo.columnas(jTable3, new String[]{null, "Producto", "Cantidad", "Precio unitario", "Subtotal"},
+                new int[]{0, 260, 110, 130, 130});
+        jTable3.getColumnModel().getColumn(1).setCellRenderer(new Estilo.Celda(Estilo.Celda.TEXTO, javax.swing.SwingConstants.LEFT, false, Tema.TEXTO));
+        jTable3.getColumnModel().getColumn(2).setCellRenderer(new Estilo.Celda(Estilo.Celda.CANTIDAD, javax.swing.SwingConstants.CENTER, false, Tema.TEXTO));
+        jTable3.getColumnModel().getColumn(3).setCellRenderer(new Estilo.Celda(Estilo.Celda.PESOS, javax.swing.SwingConstants.RIGHT, false, Tema.TEXTO));
+        jTable3.getColumnModel().getColumn(4).setCellRenderer(new Estilo.Celda(Estilo.Celda.PESOS, javax.swing.SwingConstants.RIGHT, true, Tema.TEXTO));
+
+        javax.swing.JLabel etiquetaTotal = new javax.swing.JLabel("Total");
+        etiquetaTotal.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        etiquetaTotal.setForeground(Tema.TEXTO_SUAVE);
+        totalLabel1.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 40));
+        totalLabel1.setForeground(Tema.TEXTO);
+        javax.swing.JPanel bloqueTotal = new javax.swing.JPanel(new java.awt.BorderLayout());
+        bloqueTotal.setOpaque(false);
+        bloqueTotal.add(etiquetaTotal, java.awt.BorderLayout.NORTH);
+        bloqueTotal.add(totalLabel1, java.awt.BorderLayout.CENTER);
+
+        ImprimirButon.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 19));
+        ImprimirButon.setForeground(java.awt.Color.WHITE);
+        ImprimirButon.setBackground(Estilo.AZUL);
+        ImprimirButon.setBorderPainted(false);
+        ImprimirButon.setFocusPainted(false);
+        ImprimirButon.setPreferredSize(new java.awt.Dimension(200, 54));
+        ImprimirButon.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.JPanel pieBoleta = new javax.swing.JPanel(new java.awt.BorderLayout());
+        pieBoleta.setOpaque(false);
+        pieBoleta.setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 14, 16, 16));
+        pieBoleta.add(bloqueTotal, java.awt.BorderLayout.WEST);
+        pieBoleta.add(ImprimirButon, java.awt.BorderLayout.EAST);
+
+        Superficie tarjetaBoleta = new Superficie(new java.awt.BorderLayout());
+        tarjetaBoleta.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tarjetaBoleta.add(encabezadoBoleta, java.awt.BorderLayout.NORTH);
+        tarjetaBoleta.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        tarjetaBoleta.add(pieBoleta, java.awt.BorderLayout.SOUTH);
+
+        // ---- Cuerpo
+        javax.swing.JPanel cuerpo = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        cuerpo.setBackground(Tema.FONDO);
+        cuerpo.setBorder(javax.swing.BorderFactory.createEmptyBorder(22, 22, 22, 22));
+        java.awt.GridBagConstraints g = new java.awt.GridBagConstraints();
+        g.gridy = 0;
+        g.weighty = 1;
+        g.fill = java.awt.GridBagConstraints.BOTH;
+        g.gridx = 0;
+        g.weightx = 0.42;
+        cuerpo.add(tarjetaProductos, g);
+        g.gridx = 1;
+        g.weightx = 0;
+        g.fill = java.awt.GridBagConstraints.NONE;
+        g.insets = new java.awt.Insets(0, 14, 0, 14);
+        cuerpo.add(centro, g);
+        g.gridx = 2;
+        g.weightx = 0.58;
+        g.fill = java.awt.GridBagConstraints.BOTH;
+        g.insets = new java.awt.Insets(0, 0, 0, 0);
+        cuerpo.add(tarjetaBoleta, g);
+
+        javax.swing.JPanel raiz = new javax.swing.JPanel(new java.awt.BorderLayout());
+        raiz.add(cabecera, java.awt.BorderLayout.NORTH);
+        raiz.add(cuerpo, java.awt.BorderLayout.CENTER);
+        setContentPane(raiz);
+
+        // ---- Contadores que se actualizan solos
+        javax.swing.event.TableModelListener alCambiar = e -> SwingUtilities.invokeLater(this::actualizarContadores);
+        modeloProductos.addTableModelListener(alCambiar);
+        modeloBoleta.addTableModelListener(alCambiar);
+        jTable2.getRowSorter().addRowSorterListener(e -> SwingUtilities.invokeLater(this::actualizarContadores));
+        sumatotal();
+        actualizarContadores();
+
+        pack();
+        setMinimumSize(getPreferredSize());
+        setLocationRelativeTo(null);
+        SwingUtilities.invokeLater(() -> txtBuscar.requestFocusInWindow());
+    }
+
+    private void actualizarContadores() {
+        int total = modeloProductos.getRowCount();
+        contadorProductos.setText(Estilo.miles(total));
+        int n = modeloBoleta.getRowCount();
+        contadorBoleta.setText(n == 1 ? "1 producto" : n + " productos");
+        lblMostrando.setText("Mostrando " + Estilo.miles(jTable2.getRowCount())
+                + " de " + Estilo.miles(total) + " productos");
+    }
 
     Ventas(Mainn aThis) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -464,7 +638,7 @@ totalVenta += ((Number) valor).intValue();
         int filaSeleccionada = jTable2.getSelectedRow(); 
 
     if (filaSeleccionada == -1) {
-        JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla");
+        Aviso.mostrar(null, "Seleccione un producto de la tabla");
         return;
     }
 
@@ -474,7 +648,7 @@ String nombreProducto = (String) jTable2.getValueAt(filaSeleccionada, 1);
 int precioProducto = (Integer) jTable2.getValueAt(filaSeleccionada, 2);
 
 
-    String cantidadStr = JOptionPane.showInputDialog(
+    String cantidadStr = Aviso.pedirTexto(
             null, 
             "Ingrese la cantidad para " + nombreProducto
     );
@@ -487,7 +661,7 @@ int precioProducto = (Integer) jTable2.getValueAt(filaSeleccionada, 2);
         Integer stock = cn.obtenerStock(nombreProducto);
 
 if (stock != null && cantidad > stock) {
-    JOptionPane.showMessageDialog(null, "Stock insuficiente");
+    Aviso.mostrar(null, "Stock insuficiente");
     return;
 }
 
@@ -508,7 +682,7 @@ if (stock != null && cantidad > stock) {
         sumatotal(); // recalcula el total general
 
     } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "Ingrese una cantidad válida");
+        Aviso.mostrar(null, "Ingrese una cantidad válida");
     }
     
 
@@ -517,11 +691,11 @@ if (stock != null && cantidad > stock) {
     private void ImprimirButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirButonActionPerformed
            
     if (jTable3.getRowCount() == 0) {
-        JOptionPane.showMessageDialog(this, "No hay productos en la boleta");
+        Aviso.mostrar(this, "No hay productos en la boleta");
         return;
     }
 
-    int opcion = JOptionPane.showConfirmDialog(this, "¿Confirmar venta?");
+    int opcion = Aviso.confirmar(this, "¿Confirmar venta?");
 
     if (opcion != JOptionPane.YES_OPTION) return;
 
@@ -543,7 +717,7 @@ if (stock != null && cantidad > stock) {
     int idVenta = cn.agregarVenta(totalVenta, fechaSQL, horaSQL);
 
     if (idVenta == -1) {
-        JOptionPane.showMessageDialog(this, "Error al guardar la venta");
+        Aviso.mostrar(this, "Error al guardar la venta");
         return;
     }
 
@@ -571,9 +745,9 @@ if (stockInicial != null) {
 
     // 🧹 Limpiar boleta
     ((DefaultTableModel) jTable3.getModel()).setRowCount(0);
-    totalLabel1.setText("Total: $0");
+    totalLabel1.setText(pesos(0));
 
-    JOptionPane.showMessageDialog(this, "Venta registrada correctamente 🧾");
+    Aviso.mostrar(this, "Venta registrada correctamente 🧾");
     }//GEN-LAST:event_ImprimirButonActionPerformed
 
     private void RestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RestarActionPerformed
@@ -586,7 +760,7 @@ if (filaSeleccionada != -1) {
     // Llamar al método para recalcular y actualizar el total
     restarTotal();
 } else {
-    JOptionPane.showMessageDialog(null, "Seleccione una fila para eliminar.");
+    Aviso.mostrar(null, "Seleccione una fila para eliminar.");
 }
 
     }//GEN-LAST:event_RestarActionPerformed

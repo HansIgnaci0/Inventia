@@ -79,7 +79,7 @@ private void agregarProductoGranel() {
         panel.add(new JLabel("Precio por kilo:"));
         panel.add(txtPrecio);
 
-        int opcion = JOptionPane.showConfirmDialog(
+        int opcion = Aviso.confirmar(
                 this,
                 panel,
                 "Producto a granel",
@@ -93,7 +93,7 @@ private void agregarProductoGranel() {
         double precio = Double.parseDouble(txtPrecio.getText().trim());
 
         if (nombre.isEmpty() || precio <= 0) {
-            JOptionPane.showMessageDialog(this,"Datos inválidos");
+            Aviso.mostrar(this,"Datos inválidos");
             return;
         }
 
@@ -106,10 +106,10 @@ private void agregarProductoGranel() {
         Connection con = cn.establecerConexion("root","ADMIN12341");
         cn.listarEntradaProducto(jTable1, con);
 
-        JOptionPane.showMessageDialog(this,"Producto granel agregado ✔");
+        Aviso.mostrar(this,"Producto granel agregado ✔");
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this,"Error: " + e.getMessage());
+        Aviso.mostrar(this,"Error: " + e.getMessage());
     }
 }
 
@@ -123,6 +123,7 @@ private void agregarProductoGranel() {
      * Creates new form EntradaProductos
      */
     public EntradaProductos() {
+        Tema.instalar();
         initComponents();
         mantenerFocoScanner();
         this.setLocationRelativeTo(null);
@@ -137,9 +138,204 @@ private void agregarProductoGranel() {
     txtBuscar.requestFocusInWindow();
     });
     activarBuscador();
-
+        disenarEntrada();
     }
-    
+
+    // ------------------------------------------------------------------
+    // Diseño visual. Reordena los mismos componentes de initComponents()
+    // en un catálogo (izquierda) y un panel de producto seleccionado con
+    // acciones (derecha). No toca la lógica: cada botón conserva su
+    // ActionListener original.
+    // ------------------------------------------------------------------
+
+    private Estilo.Pastilla contadorProductos;
+    private JLabel lblMostrando;
+    private javax.swing.JTextArea selNombre;
+    private JLabel selPrecio;
+    private JLabel selStock;
+
+    private void disenarEntrada() {
+        setTitle("Inventia");
+        JPanel cabecera = Estilo.cabecera(BotonAtras, new JLabel(), "Entrada de productos");
+
+        // ---- Catálogo
+        contadorProductos = new Estilo.Pastilla();
+        txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar por nombre o escanear código");
+        txtBuscar.putClientProperty("JTextField.leadingIcon", Iconos.lupa(Tema.TEXTO_SUAVE, 16));
+        txtBuscar.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 15));
+        txtBuscar.setPreferredSize(new java.awt.Dimension(340, 38));
+
+        JPanel encabezado = new JPanel(new java.awt.BorderLayout(12, 0));
+        encabezado.setOpaque(false);
+        encabezado.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 14, 16, 14));
+        encabezado.add(Estilo.tituloConPastilla("Catálogo de productos", contadorProductos), java.awt.BorderLayout.WEST);
+        encabezado.add(txtBuscar, java.awt.BorderLayout.EAST);
+
+        Estilo.tabla(jTable1, jScrollPane1);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(700, 440));
+        Estilo.columnas(jTable1, new String[]{"Producto", "Precio", "Stock"}, new int[]{380, 130, 110});
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(new Estilo.Celda(Estilo.Celda.TEXTO, javax.swing.SwingConstants.LEFT, false, Tema.TEXTO));
+        jTable1.getColumnModel().getColumn(1).setCellRenderer(new Estilo.Celda(Estilo.Celda.PESOS, javax.swing.SwingConstants.RIGHT, true, Tema.TEXTO));
+        jTable1.getColumnModel().getColumn(2).setCellRenderer(new Estilo.Celda(Estilo.Celda.TEXTO, javax.swing.SwingConstants.RIGHT, false, Tema.TEXTO));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2 && jTable1.getSelectedRow() != -1) {
+                    modificarBtn.doClick();
+                }
+            }
+        });
+
+        lblMostrando = Estilo.textoPie("");
+        JPanel pie = new JPanel(new java.awt.BorderLayout());
+        pie.setOpaque(false);
+        pie.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 14, 12, 14));
+        pie.add(lblMostrando, java.awt.BorderLayout.WEST);
+        pie.add(Estilo.textoPie("Doble clic para modificar"), java.awt.BorderLayout.EAST);
+
+        Superficie catalogo = new Superficie(new java.awt.BorderLayout());
+        catalogo.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        catalogo.add(encabezado, java.awt.BorderLayout.NORTH);
+        catalogo.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        catalogo.add(pie, java.awt.BorderLayout.SOUTH);
+
+        // ---- Producto seleccionado
+        JLabel etiqueta = Estilo.textoPie("Producto seleccionado");
+        // Área de texto de 2 líneas: ajusta nombres largos sin cortarlos.
+        selNombre = new javax.swing.JTextArea(2, 1);
+        selNombre.setLineWrap(true);
+        selNombre.setWrapStyleWord(true);
+        selNombre.setEditable(false);
+        selNombre.setFocusable(false);
+        selNombre.setOpaque(false);
+        selNombre.setBorder(null);
+        selNombre.setForeground(Tema.TEXTO);
+        selPrecio = new JLabel();
+        selStock = new JLabel();
+
+        JPanel fichas = new JPanel(new java.awt.GridLayout(1, 2, 12, 0));
+        fichas.setOpaque(false);
+        fichas.add(Estilo.ficha("Precio", selPrecio));
+        fichas.add(Estilo.ficha("Stock", selStock));
+
+        Superficie seleccionado = new Superficie(new java.awt.GridBagLayout());
+        seleccionado.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        java.awt.GridBagConstraints s = new java.awt.GridBagConstraints();
+        s.gridx = 0;
+        s.weightx = 1;
+        s.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        s.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        s.gridy = 0;
+        seleccionado.add(etiqueta, s);
+        s.gridy = 1;
+        s.insets = new java.awt.Insets(8, 0, 18, 0);
+        seleccionado.add(selNombre, s);
+        s.gridy = 2;
+        s.insets = new java.awt.Insets(0, 0, 0, 0);
+        seleccionado.add(fichas, s);
+
+        // ---- Acciones (los tres botones originales)
+        Estilo.botonAccion(granelBTn, Iconos.mas(java.awt.Color.WHITE, 22), "Agregar P. Granel", Estilo.PRIMARIO);
+        Estilo.botonAccion(modificarBtn, Iconos.lapiz(Tema.TEXTO, 22), "Modificar producto", Estilo.SECUNDARIO);
+        Estilo.botonAccion(BotonEliminar, Iconos.papelera(Estilo.ROJO, 22), "Eliminar producto", Estilo.PELIGRO);
+
+        Superficie acciones = new Superficie(new java.awt.GridLayout(3, 1, 0, 12));
+        acciones.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        acciones.add(granelBTn);
+        acciones.add(modificarBtn);
+        acciones.add(BotonEliminar);
+
+        JLabel nota = new JLabel("<html><body style='width:290px'>Eliminar pide confirmación antes de borrar el producto.</body></html>");
+        nota.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        nota.setForeground(Tema.TEXTO_SUAVE);
+
+        JPanel derecha = new JPanel(new java.awt.GridBagLayout());
+        derecha.setOpaque(false);
+        java.awt.GridBagConstraints d = new java.awt.GridBagConstraints();
+        d.gridx = 0;
+        d.weightx = 1;
+        d.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        d.anchor = java.awt.GridBagConstraints.NORTH;
+        d.gridy = 0;
+        derecha.add(seleccionado, d);
+        d.gridy = 1;
+        d.insets = new java.awt.Insets(18, 0, 0, 0);
+        derecha.add(acciones, d);
+        d.gridy = 2;
+        d.insets = new java.awt.Insets(14, 6, 0, 6);
+        derecha.add(nota, d);
+        d.gridy = 3;
+        d.weighty = 1;
+        d.insets = new java.awt.Insets(0, 0, 0, 0);
+        derecha.add(javax.swing.Box.createGlue(), d);
+        d.gridy = 4;
+        d.weighty = 0;
+        derecha.add(javax.swing.Box.createHorizontalStrut(350), d); // ancho fijo de la columna
+
+        // ---- Cuerpo
+        JPanel cuerpo = new JPanel(new java.awt.GridBagLayout());
+        cuerpo.setBackground(Tema.FONDO);
+        cuerpo.setBorder(javax.swing.BorderFactory.createEmptyBorder(22, 22, 22, 22));
+        java.awt.GridBagConstraints g = new java.awt.GridBagConstraints();
+        g.gridy = 0;
+        g.weighty = 1;
+        g.fill = java.awt.GridBagConstraints.BOTH;
+        g.gridx = 0;
+        g.weightx = 1;
+        cuerpo.add(catalogo, g);
+        g.gridx = 1;
+        g.weightx = 0;
+        g.insets = new java.awt.Insets(0, 22, 0, 0);
+        cuerpo.add(derecha, g);
+
+        JPanel raiz = new JPanel(new java.awt.BorderLayout());
+        raiz.add(cabecera, java.awt.BorderLayout.NORTH);
+        raiz.add(cuerpo, java.awt.BorderLayout.CENTER);
+        setContentPane(raiz);
+
+        // ---- Se actualizan solos
+        javax.swing.event.TableModelListener alCambiar = e -> SwingUtilities.invokeLater(this::actualizarContadores);
+        modeloProductos.addTableModelListener(alCambiar);
+        jTable1.getRowSorter().addRowSorterListener(e -> SwingUtilities.invokeLater(this::actualizarContadores));
+        jTable1.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                actualizarSeleccion();
+            }
+        });
+        actualizarContadores();
+        actualizarSeleccion();
+
+        pack();
+        setMinimumSize(getPreferredSize());
+        setLocationRelativeTo(null);
+        SwingUtilities.invokeLater(() -> txtBuscar.requestFocusInWindow());
+    }
+
+    private void actualizarContadores() {
+        int total = modeloProductos.getRowCount();
+        contadorProductos.setText(Estilo.miles(total));
+        lblMostrando.setText("Mostrando " + Estilo.miles(jTable1.getRowCount())
+                + " de " + Estilo.miles(total) + " productos");
+    }
+
+    private void actualizarSeleccion() {
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1 || fila >= jTable1.getRowCount()) {
+            selNombre.setText("Elige un producto de la lista para ver sus datos.");
+            selNombre.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 16));
+            selNombre.setForeground(Tema.TEXTO_SUAVE);
+            selPrecio.setText("—");
+            selStock.setText("—");
+            return;
+        }
+        int m = jTable1.convertRowIndexToModel(fila);
+        String nombre = String.valueOf(modeloProductos.getValueAt(m, 0));
+        selNombre.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 21));
+        selNombre.setForeground(Tema.TEXTO);
+        selNombre.setText(nombre);
+        selPrecio.setText(Estilo.pesos(modeloProductos.getValueAt(m, 1)));
+        selStock.setText(String.valueOf(modeloProductos.getValueAt(m, 2)));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -267,16 +463,19 @@ private void agregarProductoGranel() {
     private void BotonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonEliminarActionPerformed
         
     int fila = jTable1.getSelectedRow();
-    fila = jTable1.convertRowIndexToModel(fila);
 
+    // Se valida antes de convertir: con -1 la conversión lanzaba una excepción y el aviso nunca salía.
     if (fila == -1) {
-        JOptionPane.showMessageDialog(this, "Seleccione un producto");
+        Aviso.mostrar(this, "Seleccione un producto");
         return;
     }
+    fila = jTable1.convertRowIndexToModel(fila);
 
-    String nombre = jTable1.getValueAt(fila, 0).toString();
+    // El nombre se lee del modelo con el índice del modelo. Antes se leía de la tabla con ese
+    // índice, y con el buscador activo podía tomar el producto de otra fila.
+    String nombre = modeloProductos.getValueAt(fila, 0).toString();
 
-    int confirm = JOptionPane.showConfirmDialog(
+    int confirm = Aviso.confirmar(
         this,
         "¿Eliminar este producto?",
         "Confirmar",
@@ -303,7 +502,7 @@ if (!texto.matches("\\d+")) {
 String codigo = texto;
         codigo = codigo.trim();
 if (!codigo.matches("\\d{8,14}")) {
-    JOptionPane.showMessageDialog(this,
+    Aviso.mostrar(this,
         "⚠ Código inválido\n" +
         "Vuelva a escanear el producto.\n\n" +
         "El código debe tener solo números (8 a 14 dígitos)."
@@ -331,7 +530,7 @@ if (!codigo.matches("\\d{8,14}")) {
     panelNuevo.add(new JLabel("Stock inicial:"));
     panelNuevo.add(txtStock);
 
-    int opcion = JOptionPane.showConfirmDialog(
+    int opcion = Aviso.confirmar(
             this,
             panelNuevo,
             "Nuevo producto",
@@ -353,7 +552,7 @@ if (!codigo.matches("\\d{8,14}")) {
     Connection conexionTabla = cn.establecerConexion("root", "ADMIN12341");
     cn.listarEntradaProducto(jTable1, conexionTabla);
 
-    JOptionPane.showMessageDialog(this,
+    Aviso.mostrar(this,
             "Producto creado correctamente\n" +
             nombre +
             "\nStock: " + stock +
@@ -382,7 +581,7 @@ if (!codigo.matches("\\d{8,14}")) {
         panel.add(new JLabel("Precio unitario:"));
         panel.add(txtPrecio);
 
-        int opcion = JOptionPane.showConfirmDialog(
+        int opcion = Aviso.confirmar(
                 this,
                 panel,
                 "Ingreso de producto",
@@ -404,7 +603,7 @@ if (!codigo.matches("\\d{8,14}")) {
         Connection conexionTabla = cn.establecerConexion("root", "ADMIN12341");
 cn.listarEntradaProducto(jTable1, conexionTabla);
 
-JOptionPane.showMessageDialog(this,
+Aviso.mostrar(this,
         "Producto actualizado:\n" +
         nombre +
         "\nNuevo stock: " + nuevoStock +
@@ -413,7 +612,7 @@ JOptionPane.showMessageDialog(this,
         txtBuscar.setText("");
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        Aviso.mostrar(this, "Error: " + e.getMessage());
     }
     }//GEN-LAST:event_txtBuscarActionPerformed
 
@@ -428,7 +627,7 @@ JOptionPane.showMessageDialog(this,
     int fila = jTable1.getSelectedRow();
 
     if (fila == -1) {
-        JOptionPane.showMessageDialog(this, "Seleccione un producto");
+        Aviso.mostrar(this, "Seleccione un producto");
         return;
     }
 
@@ -463,7 +662,7 @@ boolean esGranel = !codigo.matches("\\d+"); // si NO es numérico → granel
         panel.add(new JLabel("⚖ Producto a granel"));
     }
 
-    int opcion = JOptionPane.showConfirmDialog(
+    int opcion = Aviso.confirmar(
             this,
             panel,
             "Modificar producto",
@@ -475,7 +674,7 @@ boolean esGranel = !codigo.matches("\\d+"); // si NO es numérico → granel
     String nuevoNombre = txtNombre.getText().trim();
 
 if (nuevoNombre.isEmpty()) {
-    JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío");
+    Aviso.mostrar(this, "El nombre no puede estar vacío");
     return;
 }
 
@@ -483,7 +682,7 @@ if (nuevoNombre.isEmpty()) {
 
 
     if (nuevoPrecio <= 0) {
-        JOptionPane.showMessageDialog(this, "Precio inválido");
+        Aviso.mostrar(this, "Precio inválido");
         return;
     }
 
@@ -496,7 +695,7 @@ if (nuevoNombre.isEmpty()) {
     int nuevoStock = Integer.parseInt(txtStock.getText().trim());
 
     if (nuevoStock < 0) {
-        JOptionPane.showMessageDialog(this, "Stock inválido");
+        Aviso.mostrar(this, "Stock inválido");
         return;
     }
 
@@ -506,10 +705,10 @@ if (nuevoNombre.isEmpty()) {
     Connection con = cn.establecerConexion("root", "ADMIN12341");
     cn.listarEntradaProducto(jTable1, con);
 
-    JOptionPane.showMessageDialog(this, "Producto actualizado ✔");
+    Aviso.mostrar(this, "Producto actualizado ✔");
 
 } catch (Exception e) {
-    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    Aviso.mostrar(this, "Error: " + e.getMessage());
 }
 
     }//GEN-LAST:event_modificarBtnActionPerformed

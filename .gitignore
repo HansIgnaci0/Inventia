@@ -3,3 +3,6 @@ target/
 *.class
 *.iml
 dependency-reduced-pom.xml
+.dev-libs/
+.dev-out/
+capturas/

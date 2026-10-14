@@ -51,6 +51,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.26</version>
         </dependency>
+        <!-- Tema visual moderno para Swing -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version>
+        </dependency>
         <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>jcalendar-1.4</artifactId>

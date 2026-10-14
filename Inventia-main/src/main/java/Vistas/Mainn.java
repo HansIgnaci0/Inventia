@@ -16,9 +16,88 @@ public class Mainn extends javax.swing.JFrame {
      * Creates new form Mainn
      */
     public Mainn() {
+        Tema.instalar();
         initComponents();
+        disenarMenu();
+        Tema.aplicar(this);
         this.setLocationRelativeTo(null);
- 
+
+    }
+
+    /**
+     * Reordena los mismos botones de initComponents() en un panel de módulos.
+     * Vive fuera del bloque generado para que NetBeans no lo pise.
+     * Cada botón conserva su ActionListener original; la tarjeta solo lo acciona.
+     */
+    private void disenarMenu() {
+        getRootPane().putClientProperty(Tema.SIN_CABECERA, Boolean.TRUE);
+        setTitle("Inventia");
+
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.BorderLayout(0, 36));
+        panel.setBackground(Tema.FONDO);
+        panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(52, 56, 56, 56));
+
+        // Saludo según la hora
+        jLabel1.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        jLabel1.setText(saludo());
+        jLabel1.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 36));
+        jLabel1.setForeground(Tema.TEXTO);
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        javax.swing.JLabel subtitulo = new javax.swing.JLabel("Selecciona el módulo con el que deseas trabajar.");
+        subtitulo.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        subtitulo.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 17));
+        subtitulo.setForeground(Tema.TEXTO_SUAVE);
+
+        javax.swing.JPanel encabezado = new javax.swing.JPanel(new java.awt.BorderLayout(0, 6));
+        encabezado.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        encabezado.setOpaque(false);
+        encabezado.add(jLabel1, java.awt.BorderLayout.NORTH);
+        encabezado.add(subtitulo, java.awt.BorderLayout.CENTER);
+        panel.add(encabezado, java.awt.BorderLayout.NORTH);
+
+        // Tarjetas
+        java.awt.Color azul = new java.awt.Color(0x2F6DB5);
+        java.awt.Color violeta = new java.awt.Color(0x6B4FC4);
+        java.awt.Color verde = new java.awt.Color(0x2E8B57);
+
+        javax.swing.JPanel tarjetas = new javax.swing.JPanel(new java.awt.GridLayout(1, 3, 24, 0));
+        tarjetas.putClientProperty(Tema.OMITIR, Boolean.TRUE);
+        tarjetas.setOpaque(false);
+        tarjetas.add(new TarjetaModulo(azul, new java.awt.Color(0xE6EEF8), Iconos.carrito(azul, 28),
+                "Venta", "Registra una nueva venta, agrega productos y emite el comprobante.", "F2", jButton1));
+        tarjetas.add(new TarjetaModulo(violeta, new java.awt.Color(0xEEEAF9), Iconos.recibo(violeta, 28),
+                "Detalle de ventas", "Consulta y revisa las ventas de cada día.", "F3", jButton2));
+        tarjetas.add(new TarjetaModulo(verde, new java.awt.Color(0xE5F3EB), Iconos.caja(verde, 28),
+                "Entrada de productos", "Consulta el inventario, agrega productos y actualiza el stock.", "F4", jButton3));
+        panel.add(tarjetas, java.awt.BorderLayout.CENTER);
+
+        panel.setPreferredSize(new java.awt.Dimension(1040, 560));
+        setContentPane(panel);
+
+        asignarAtajo("F2", jButton1);
+        asignarAtajo("F3", jButton2);
+        asignarAtajo("F4", jButton3);
+        pack();
+    }
+
+    private static String saludo() {
+        int hora = java.time.LocalTime.now().getHour();
+        if (hora < 12) {
+            return "Buenos días";
+        }
+        return hora < 20 ? "Buenas tardes" : "Buenas noches";
+    }
+
+    private void asignarAtajo(String tecla, javax.swing.JButton boton) {
+        getRootPane().getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(javax.swing.KeyStroke.getKeyStroke(tecla), "abrir" + tecla);
+        getRootPane().getActionMap().put("abrir" + tecla, new javax.swing.AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                boton.doClick();
+            }
+        });
     }
 
     
