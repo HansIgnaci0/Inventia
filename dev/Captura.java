@@ -59,7 +59,10 @@ public class Captura {
                     }
                 });
                 JFrame f = caja[0];
-                SwingUtilities.invokeAndWait(() -> rellenarTablas(f));
+                SwingUtilities.invokeAndWait(() -> {
+                    rellenarTablas(f);
+                    recalcularTotales(f);
+                });
                 SwingUtilities.invokeAndWait(() -> { }); // deja correr los avisos de cambio de las tablas
                 SwingUtilities.invokeAndWait(() -> {
                     f.setSize(f.getPreferredSize().width, Math.max(f.getPreferredSize().height, f.getHeight()));
@@ -107,6 +110,32 @@ public class Captura {
             }
         }
         return null;
+    }
+
+    /** Las filas de ejemplo no pasan por la logica de la vista: se recalcula el total como lo haria ella. */
+    private static void recalcularTotales(JFrame f) {
+        try {
+            java.lang.reflect.Method m = f.getClass().getDeclaredMethod("sumatotal");
+            m.setAccessible(true);
+            m.invoke(f); // Ventas
+        } catch (Exception ignorado) {
+            // la vista no tiene sumatotal()
+        }
+        try {
+            java.lang.reflect.Field campo = f.getClass().getDeclaredField("totalLabel");
+            campo.setAccessible(true);
+            JTable tabla = null;
+            java.lang.reflect.Field t = f.getClass().getDeclaredField("jTableDetalle");
+            t.setAccessible(true);
+            tabla = (JTable) t.get(f);
+            int suma = 0;
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+                suma += ((Number) tabla.getValueAt(i, 1)).intValue();
+            }
+            ((javax.swing.JLabel) campo.get(f)).setText(Vistas.Estilo.pesos(suma)); // Detalle
+        } catch (Exception ignorado) {
+            // la vista no es Detalle
+        }
     }
 
     private static void rellenarTablas(Container c) {

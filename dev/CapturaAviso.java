@@ -100,7 +100,7 @@ public class CapturaAviso {
             try {
                 Thread.sleep(espera);
                 Rectangle zona = marco.getBounds();
-                zona.grow(30, 30);
+                zona.grow(-9, -9); // solo el interior de la ventana: sin escritorio alrededor
                 BufferedImage img = new Robot().createScreenCapture(zona);
                 ImageIO.write(img, "png", new File(carpeta, nombre + ".png"));
                 Thread.sleep(250);
